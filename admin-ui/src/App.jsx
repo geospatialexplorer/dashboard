@@ -3,8 +3,8 @@ import { Layout, Menu, Button, Switch } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  HomeOutlined,
-  UserOutlined,
+  DashboardOutlined,
+  BarChartOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import styled, { ThemeProvider } from "styled-components";
@@ -20,9 +20,10 @@ const darkTheme = {
 const lightTheme = {
   background: "#fff",
   textColor: "#000",
-  menuBackground: "#fff",
+  menuBackground: "#f0f2f5",
 };
 
+// Styled components
 const StyledLayout = styled(Layout)`
   height: 100vh;
 `;
@@ -40,9 +41,14 @@ const StyledSider = styled(Sider)`
   background-color: ${({ theme }) => theme.menuBackground};
 `;
 
+const Dashboard = () => <div>Dashboard Content</div>;
+const Chart = () => <div>Chart Content</div>;
+const Table = () => <div>Table Content</div>;
+
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false); // Default to light theme
+  const [selectedMenu, setSelectedMenu] = useState("1");
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -53,6 +59,19 @@ const App = () => {
   };
 
   const currentTheme = isDarkMode ? darkTheme : lightTheme;
+
+  const renderContent = () => {
+    switch (selectedMenu) {
+      case "1":
+        return <Dashboard />;
+      case "2":
+        return <Chart />;
+      case "3":
+        return <Table />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
   return (
     <ThemeProvider theme={currentTheme}>
@@ -67,17 +86,29 @@ const App = () => {
           <Menu
             theme={isDarkMode ? "dark" : "light"}
             mode="inline"
-            defaultSelectedKeys={["1"]}
+            selectedKeys={[selectedMenu]}
             style={{ height: "100%" }}
           >
-            <Menu.Item key="1" icon={<HomeOutlined />}>
-              Home
+            <Menu.Item
+              key="1"
+              icon={<DashboardOutlined />}
+              onClick={() => setSelectedMenu("1")}
+            >
+              Dashboard
             </Menu.Item>
-            <Menu.Item key="2" icon={<UserOutlined />}>
-              Profile
+            <Menu.Item
+              key="2"
+              icon={<BarChartOutlined />}
+              onClick={() => setSelectedMenu("2")}
+            >
+              Chart
             </Menu.Item>
-            <Menu.Item key="3" icon={<SettingOutlined />}>
-              Settings
+            <Menu.Item
+              key="3"
+              icon={<SettingOutlined />}
+              onClick={() => setSelectedMenu("3")}
+            >
+              Table
             </Menu.Item>
           </Menu>
         </StyledSider>
@@ -101,11 +132,12 @@ const App = () => {
               margin: "24px 16px",
               padding: 24,
               minHeight: 280,
+              
               background: currentTheme.menuBackground,
               color: currentTheme.textColor,
             }}
           >
-            Content goes here.
+            {renderContent()}
           </Content>
         </Layout>
       </StyledLayout>
