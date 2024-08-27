@@ -26,7 +26,7 @@ const MoreInfoButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+
   cursor: pointer;
 
   &:hover {
@@ -54,7 +54,7 @@ const cardStyle = {
   padding: '20px',
 };
 
-const Dashboard = () => {
+const Dashboard = ({theme}) => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
@@ -73,7 +73,7 @@ const Dashboard = () => {
   });
 
   return (
-    <div style={{ padding: '30px' }}>
+    <div>
       <h1>Dashboard</h1>
       <Row gutter={[16, 16]}>
         {cardsData.map((card, index) => (

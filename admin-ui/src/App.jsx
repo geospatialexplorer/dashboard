@@ -9,6 +9,8 @@ import {
 } from "@ant-design/icons";
 import styled, { ThemeProvider } from "styled-components";
 import Dashboard from "./components/Dashboard";
+import Chart from "./components/Chart";
+import Tabledata from "./components/Table";
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -17,12 +19,14 @@ const darkTheme = {
   background: "#001529",
   textColor: "#fff",
   menuBackground: "#001529",
+  logoColor: "#fff",
 };
 
 const lightTheme = {
   background: "#fff",
   textColor: "#000",
   menuBackground: "#f0f2f5",
+  logoColor: "#1890ff",
 };
 
 // Styled components
@@ -43,8 +47,19 @@ const StyledSider = styled(Sider)`
   background-color: ${({ theme }) => theme.menuBackground};
 `;
 
-const Chart = () => <div>Chart Content</div>;
-const Table = () => <div>Table Content</div>;
+const Logo = styled.div`
+  height: 64px;
+  margin: 16px;
+  color: ${({ theme }) => theme.logoColor};
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.menuBackground};
+  border-radius: 4px;
+`;
+
+
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -68,9 +83,9 @@ const App = () => {
       case "1":
         return <Dashboard />;
       case "2":
-        return <Chart />;
+        return <Chart theme={currentTheme} />; // Pass the current theme to Chart
       case "3":
-        return <Table />;
+        return <Tabledata/>;
       default:
         return <Dashboard />;
     }
@@ -86,12 +101,12 @@ const App = () => {
           width={250}
           collapsedWidth={screens.xs ? 0 : 80} // Hide Sider on extra small screens
         >
-          <div className="logo" />
+       
           <Menu
             theme={isDarkMode ? "dark" : "light"}
             mode="inline"
             selectedKeys={[selectedMenu]}
-            style={{ height: "100%" }}
+            style={{ height: "90%",paddingTop: "60px" }}
           >
             <Menu.Item
               key="1"
