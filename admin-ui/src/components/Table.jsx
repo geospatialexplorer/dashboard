@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Table, Select, Input, Card } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
@@ -53,8 +53,6 @@ const Tabledata = () => {
     setSearchText(""); // Clear search text when states change
   };
 
-
-
   // Handle search input change
   const handleSearch = (e) => {
     setSearchText(e.target.value);
@@ -79,22 +77,35 @@ const Tabledata = () => {
       key: "population",
     },
     {
-      title: "Area (sq km)",
+      title: "Diseaseprevalance if NCAP target are meet (in%)",
+      dataIndex: "Target",
+      key: "Target",
+    },
+    {
+      title: "Actual PM 2.5 concentration (in ug/m3",
       dataIndex: "area",
       key: "area",
+    },
+    {
+      title: "Target PM 2.5 concentration by NCAP (in ug",
+      dataIndex: "column",
+      key: "column",
     },
   ];
 
   return (
     <Card>
+      <h2>
+        <center>
+          Diseas prevalance according to NFHS and PM2.5 concentration
+        </center>
+      </h2>
       <Select
         mode="multiple"
         placeholder="Select States"
         style={{ width: "100%", marginBottom: 16 }}
         onChange={handleStateChange}
         value={selectedStates}
-       
-        
       >
         {Object.keys(stateData)
           .filter((state) =>
