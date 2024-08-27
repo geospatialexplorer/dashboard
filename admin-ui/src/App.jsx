@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Menu, Button, Switch } from "antd";
+import { Layout, Menu, Button, Switch, Grid } from "antd";
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -8,8 +8,10 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import styled, { ThemeProvider } from "styled-components";
+import Dashboard from "./components/Dashboard";
 
 const { Header, Sider, Content } = Layout;
+const { useBreakpoint } = Grid;
 
 const darkTheme = {
   background: "#001529",
@@ -25,7 +27,7 @@ const lightTheme = {
 
 // Styled components
 const StyledLayout = styled(Layout)`
-  height: 100vh;
+  height: 150vh;
 `;
 
 const StyledHeader = styled(Header)`
@@ -41,7 +43,6 @@ const StyledSider = styled(Sider)`
   background-color: ${({ theme }) => theme.menuBackground};
 `;
 
-const Dashboard = () => <div>Dashboard Content</div>;
 const Chart = () => <div>Chart Content</div>;
 const Table = () => <div>Table Content</div>;
 
@@ -59,6 +60,8 @@ const App = () => {
   };
 
   const currentTheme = isDarkMode ? darkTheme : lightTheme;
+
+  const screens = useBreakpoint();
 
   const renderContent = () => {
     switch (selectedMenu) {
@@ -81,6 +84,7 @@ const App = () => {
           collapsible
           collapsed={collapsed}
           width={250}
+          collapsedWidth={screens.xs ? 0 : 80} // Hide Sider on extra small screens
         >
           <div className="logo" />
           <Menu
@@ -132,7 +136,6 @@ const App = () => {
               margin: "24px 16px",
               padding: 24,
               minHeight: 280,
-              
               background: currentTheme.menuBackground,
               color: currentTheme.textColor,
             }}
