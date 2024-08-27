@@ -68,7 +68,7 @@ const Chart = () => {
   const chartWidth = visibleDataCount * 60; // 60px per data point
 
   return (
-    <div style={{ height: "80vh" }}>
+    <div >
       <h2
         style={{
           textAlign: "center",
@@ -82,7 +82,7 @@ const Chart = () => {
           marginTop: "60px",
           width: "100%",
           overflowX: "scroll",
-          height: "calc(80vh - 60px)",
+          height: "calc(70vh - 60px)",
         }}
       >
         <div style={{ width: `${chartWidth}px`, height: "100%" }}>
