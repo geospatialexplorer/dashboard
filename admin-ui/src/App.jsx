@@ -63,7 +63,7 @@ const Logo = styled.div`
 
 const App = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // Default to light theme
+  const [isDarkMode, setIsDarkMode] = useState(false); 
   const [selectedMenu, setSelectedMenu] = useState("1");
 
   const toggleSidebar = () => {
@@ -151,6 +151,7 @@ const App = () => {
               margin: "24px 16px",
               padding: 24,
               minHeight: 280,
+              
               background: currentTheme.menuBackground,
               color: currentTheme.textColor,
             }}
