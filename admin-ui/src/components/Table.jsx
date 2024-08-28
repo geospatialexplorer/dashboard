@@ -5,60 +5,200 @@ import { SearchOutlined } from "@ant-design/icons";
 // Expanded dataset with Indian states and districts
 const stateData = {
   "Tamil Nadu": [
-    { district: "Chennai", population: 10000000, area: 426 },
-    { district: "Coimbatore", population: 2500000, area: 1118 },
-    { district: "Madurai", population: 1500000, area: 150 },
-    { district: "Salem", population: 600000, area: 585 },
-    { district: "Tiruchirappalli", population: 500000, area: 444 },
+    {
+      district: "Chennai",
+      population: 10000000,
+      area: 426,
+      target: 20,
+      actual: 35,
+    },
+    {
+      district: "Coimbatore",
+      population: 2500000,
+      area: 1118,
+      target: 15,
+      actual: 30,
+    },
+    {
+      district: "Madurai",
+      population: 1500000,
+      area: 150,
+      target: 18,
+      actual: 28,
+    },
+    {
+      district: "Salem",
+      population: 600000,
+      area: 585,
+      target: 22,
+      actual: 32,
+    },
+    {
+      district: "Tiruchirappalli",
+      population: 500000,
+      area: 444,
+      target: 25,
+      actual: 33,
+    },
   ],
   Karnataka: [
-    { district: "Bengaluru", population: 8000000, area: 709 },
-    { district: "Mysuru", population: 900000, area: 128 },
-    { district: "Hubli-Dharwad", population: 1000000, area: 406 },
-    { district: "Belagavi", population: 500000, area: 155 },
-    { district: "Dakshina Kannada", population: 2000000, area: 4856 },
+    {
+      district: "Bengaluru",
+      population: 8000000,
+      area: 709,
+      target: 17,
+      actual: 25,
+    },
+    {
+      district: "Mysuru",
+      population: 900000,
+      area: 128,
+      target: 20,
+      actual: 27,
+    },
+    {
+      district: "Hubli-Dharwad",
+      population: 1000000,
+      area: 406,
+      target: 16,
+      actual: 30,
+    },
+    {
+      district: "Belagavi",
+      population: 500000,
+      area: 155,
+      target: 21,
+      actual: 29,
+    },
+    {
+      district: "Dakshina Kannada",
+      population: 2000000,
+      area: 4856,
+      target: 19,
+      actual: 31,
+    },
   ],
   Maharashtra: [
-    { district: "Mumbai", population: 12000000, area: 603 },
-    { district: "Pune", population: 3000000, area: 730 },
-    { district: "Nagpur", population: 2500000, area: 217 },
-    { district: "Aurangabad", population: 1000000, area: 165 },
-    { district: "Nashik", population: 2000000, area: 228 },
+    {
+      district: "Mumbai",
+      population: 12000000,
+      area: 603,
+      target: 23,
+      actual: 33,
+    },
+    {
+      district: "Pune",
+      population: 3000000,
+      area: 730,
+      target: 22,
+      actual: 34,
+    },
+    {
+      district: "Nagpur",
+      population: 2500000,
+      area: 217,
+      target: 25,
+      actual: 35,
+    },
+    {
+      district: "Aurangabad",
+      population: 1000000,
+      area: 165,
+      target: 24,
+      actual: 32,
+    },
+    {
+      district: "Nashik",
+      population: 2000000,
+      area: 228,
+      target: 26,
+      actual: 33,
+    },
   ],
   "Uttar Pradesh": [
-    { district: "Lucknow", population: 2800000, area: 250 },
-    { district: "Kanpur", population: 3000000, area: 605 },
-    { district: "Varanasi", population: 1200000, area: 139 },
-    { district: "Agra", population: 1500000, area: 188 },
-    { district: "Gorakhpur", population: 650000, area: 289 },
+    {
+      district: "Lucknow",
+      population: 2800000,
+      area: 250,
+      target: 30,
+      actual: 37,
+    },
+    {
+      district: "Kanpur",
+      population: 3000000,
+      area: 605,
+      target: 32,
+      actual: 36,
+    },
+    {
+      district: "Varanasi",
+      population: 1200000,
+      area: 139,
+      target: 28,
+      actual: 33,
+    },
+    {
+      district: "Agra",
+      population: 1500000,
+      area: 188,
+      target: 27,
+      actual: 35,
+    },
+    {
+      district: "Gorakhpur",
+      population: 650000,
+      area: 289,
+      target: 26,
+      actual: 34,
+    },
   ],
   "West Bengal": [
-    { district: "Kolkata", population: 4500000, area: 185 },
-    { district: "Howrah", population: 1000000, area: 150 },
-    { district: "Darjeeling", population: 120000, area: 3149 },
-    { district: "Murshidabad", population: 700000, area: 5321 },
+    {
+      district: "Kolkata",
+      population: 4500000,
+      area: 185,
+      target: 24,
+      actual: 32,
+    },
+    {
+      district: "Howrah",
+      population: 1000000,
+      area: 150,
+      target: 22,
+      actual: 31,
+    },
+    {
+      district: "Darjeeling",
+      population: 120000,
+      area: 3149,
+      target: 19,
+      actual: 29,
+    },
+    {
+      district: "Murshidabad",
+      population: 700000,
+      area: 5321,
+      target: 21,
+      actual: 30,
+    },
   ],
   // Add more states and districts if needed
 };
 
 const Tabledata = () => {
-  // Default to Tamil Nadu
   const [selectedStates, setSelectedStates] = useState(["Tamil Nadu"]);
   const [searchText, setSearchText] = useState("");
-  const [stateSearch, setStateSearch] = useState(""); // For searching states
+  const [stateSearch, setStateSearch] = useState("");
 
-  // Update selected states and reset search text
   const handleStateChange = (value) => {
     setSelectedStates(value);
     setSearchText(""); // Clear search text when states change
   };
 
-  // Handle search input change
   const handleSearch = (e) => {
     setSearchText(e.target.value);
   };
 
-  // Filter and aggregate data based on selected states
   const filteredData = selectedStates
     .flatMap((state) => stateData[state] || [])
     .filter((item) =>
@@ -72,24 +212,24 @@ const Tabledata = () => {
       key: "district",
     },
     {
-      title: "Disease prevalence according to NFHS (in %)",
+      title: "Population",
       dataIndex: "population",
       key: "population",
     },
     {
-      title: "Diseaseprevalance if NCAP target are meet (in%)",
-      dataIndex: "Target",
-      key: "Target",
-    },
-    {
-      title: "Actual PM 2.5 concentration (in ug/m3",
+      title: "Area (sq km)",
       dataIndex: "area",
       key: "area",
     },
     {
-      title: "Target PM 2.5 concentration by NCAP (in ug",
-      dataIndex: "column",
-      key: "column",
+      title: "Target PM 2.5 (ug/m3)",
+      dataIndex: "target",
+      key: "target",
+    },
+    {
+      title: "Actual PM 2.5 (ug/m3)",
+      dataIndex: "actual",
+      key: "actual",
     },
   ];
 
@@ -97,7 +237,7 @@ const Tabledata = () => {
     <Card>
       <h2>
         <center>
-          Diseas prevalance according to NFHS and PM2.5 concentration
+          Disease Prevalence According to NFHS and PM2.5 Concentration
         </center>
       </h2>
       <Select
@@ -129,6 +269,7 @@ const Tabledata = () => {
         columns={columns}
         rowKey="district"
         pagination={{ pageSize: 5 }}
+        scroll={{ x: "max-content" }} // Enables horizontal scrolling
       />
     </Card>
   );
