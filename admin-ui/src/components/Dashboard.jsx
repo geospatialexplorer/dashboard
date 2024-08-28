@@ -11,6 +11,7 @@ import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import OpenLayersMap from "./OpenLayers";
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
@@ -133,6 +134,7 @@ const Dashboard = () => {
           </Col>
         ))}
       </Row>
+      <OpenLayersMap/>
     </div>
   );
 };

@@ -15,6 +15,7 @@ import Dashboard from "./components/Dashboard";
 import Chart from "./components/Chart";
 import Tabledata from "./components/Table";
 import CheckboxComponent from "./components/button";
+import OpenLayersMap from "./components/OpenLayers";
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -100,7 +101,7 @@ const AppContent = () => {
       case "2":
         return <Chart />;
       case "3":
-        return <Tabledata />;
+        return <Tabledata/>;
       default:
         return <Dashboard />;
     }
@@ -188,6 +189,7 @@ const AppContent = () => {
           <CheckboxComponent toggleTheme={toggleTheme} />
         </StyledHeader>
         <StyledContent>{renderContent()}</StyledContent>
+        
       </Layout>
     </StyledLayout>
   );
