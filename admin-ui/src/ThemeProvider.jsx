@@ -10,7 +10,7 @@ const themes = {
     backgroundColor: "#ffffff", // White
     textColor: "#000000", // Black
     menuBackground: "#ffffff",
-    menuHoverBackground: "#ffa07a",
+    menuHoverBackground: "orange",
     menuHoverColor: "#ffffff",
     menuSelectedBackground: "#ff4500",
     menuSelectedColor: "#ffffff",

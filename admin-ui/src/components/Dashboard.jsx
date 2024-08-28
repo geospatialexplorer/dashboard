@@ -1,10 +1,16 @@
-import React, { useEffect } from 'react';
-import { Card, Col, Row } from 'antd';
-import { ArrowRightOutlined, ShoppingOutlined, LineChartOutlined, UserAddOutlined, PieChartOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
-import { animated, useSpring } from 'react-spring';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import React, { useEffect } from "react";
+import { Card, Col, Row } from "antd";
+import {
+  ArrowRightOutlined,
+  ShoppingOutlined,
+  LineChartOutlined,
+  UserAddOutlined,
+  PieChartOutlined,
+} from "@ant-design/icons";
+import styled from "styled-components";
+import { animated, useSpring } from "react-spring";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
@@ -26,7 +32,6 @@ const MoreInfoButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
   cursor: pointer;
 
   &:hover {
@@ -50,25 +55,47 @@ const TextContent = styled.div`
 `;
 
 const cardStyle = {
-  color: 'white',
-  padding: '20px',
+  color: "white",
+  padding: "20px",
 };
 
-const Dashboard = ({theme}) => {
+const Dashboard = () => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
 
   const cardsData = [
-    { title: 'New Orders', count: 150, color: '#00bfa5', icon: <ShoppingOutlined /> },
-    { title: 'Bounce Rate', count: '53%', color: '#4caf50', icon: <LineChartOutlined /> },
-    { title: 'User Registrations', count: 44, color: '#ffca28', icon: <UserAddOutlined /> },
-    { title: 'Unique Visitors', count: 65, color: '#f44336', icon: <PieChartOutlined /> },
+    {
+      title: "New Orders",
+      count: 150,
+      color: "#00bfa5",
+      icon: <ShoppingOutlined />,
+    },
+    {
+      title: "Bounce Rate",
+      count: "53%",
+      color: "#4caf50",
+      icon: <LineChartOutlined />,
+    },
+    {
+      title: "User Registrations",
+      count: 44,
+      color: "#ffca28",
+      icon: <UserAddOutlined />,
+    },
+    {
+      title: "Unique Visitors",
+      count: 65,
+      color: "#f44336",
+      icon: <PieChartOutlined />,
+    },
   ];
 
+  // Keep the animation simple and trigger it on initial render
   const props = useSpring({
     opacity: 1,
-    from: { opacity: 0 },
+    transform: "translateY(0)",
+    from: { opacity: 0, transform: "translateY(20px)" },
     config: { duration: 1000 },
   });
 
@@ -77,13 +104,7 @@ const Dashboard = ({theme}) => {
       <h1>Dashboard</h1>
       <Row gutter={[16, 16]}>
         {cardsData.map((card, index) => (
-          <Col
-            key={index}
-            xs={24}
-            sm={12}
-            md={8}
-            lg={6}
-          >
+          <Col key={index} xs={24} sm={12} md={8} lg={6}>
             <AnimatedCard
               data-aos="flip-left"
               style={{ backgroundColor: card.color, ...props }}
@@ -92,15 +113,17 @@ const Dashboard = ({theme}) => {
             >
               <CardContent>
                 <TextContent>
-                  <div style={{ fontSize: '24px', fontWeight: 'bold' }}>{card.count}</div>
-                  <div style={{ fontSize: '16px', marginBottom: '10px' }}>{card.title}</div>
+                  <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+                    {card.count}
+                  </div>
+                  <div style={{ fontSize: "16px", marginBottom: "10px" }}>
+                    {card.title}
+                  </div>
                 </TextContent>
-                <IconContainer>
-                  {card.icon}
-                </IconContainer>
+                <IconContainer>{card.icon}</IconContainer>
               </CardContent>
               <MoreInfoButton>
-                More info <ArrowRightOutlined style={{ marginLeft: '5px' }} />
+                More info <ArrowRightOutlined style={{ marginLeft: "5px" }} />
               </MoreInfoButton>
             </AnimatedCard>
           </Col>

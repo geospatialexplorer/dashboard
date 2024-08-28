@@ -8,7 +8,7 @@
         inset 0 0 10px hsla(0, 0%, 0%, .5),
         0 0 0 1px hsla(0, 0%, 0%, .1),
         0 -1px 2px 2px hsla(0, 0%, 0%, .25),
-        0 2px 2px 2px hsla(0, 0%, 100%, .75);
+        0 2px 2px 2px hsla(0, 3%, 41%, 0.75);
     cursor: pointer;
     height: 25px;
     padding-right: 25px;
@@ -36,4 +36,25 @@
     background-position: 0 0, 35px 0;
     padding-left: 25px;
     padding-right: 0;
+}
+
+@media (max-width: 600px) {
+  .wrap-check-61 input[type="checkbox"] {
+    width: 50px; /* Adjusting width for smaller screens */
+    height: 20px; /* Adjusting height for smaller screens */
+    background-size: 100% 100%, 150% 100%;
+    background-position: 0 0, 20px 0;
+     -webkit-tap-highlight-color: transparent;
+  }
+
+  .wrap-check-61 input[type="checkbox"]:after {
+    height: 20px; /* Adjusting the height of the inner circle */
+    width: 30px; /* Adjusting the width of the inner circle */
+  }
+
+  .wrap-check-61 input[type="checkbox"]:checked {
+    background-position: 0 0, 25px 0; /* Adjusted position for the smaller checkbox */
+    padding-left: 20px; /* Adjusting padding for smaller size */
+    padding-right: 0;
+  }
 }
