@@ -70,24 +70,28 @@ const Dashboard = () => {
       count: 150,
       color: "#00bfa5",
       icon: <ShoppingOutlined />,
+      aosAnimation: "flip-left",
     },
     {
       title: "Bounce Rate",
       count: "53%",
       color: "#4caf50",
       icon: <LineChartOutlined />,
+      aosAnimation: "fade-up",
     },
     {
       title: "User Registrations",
       count: 44,
       color: "#ffca28",
       icon: <UserAddOutlined />,
+      aosAnimation: "zoom-in",
     },
     {
       title: "Unique Visitors",
       count: 65,
       color: "#f44336",
       icon: <PieChartOutlined />,
+      aosAnimation: "flip-right",
     },
   ];
 
@@ -106,7 +110,7 @@ const Dashboard = () => {
         {cardsData.map((card, index) => (
           <Col key={index} xs={24} sm={12} md={8} lg={6}>
             <AnimatedCard
-              data-aos="flip-left"
+              data-aos={card.aosAnimation}
               style={{ backgroundColor: card.color, ...props }}
               hoverable
               bodyStyle={cardStyle}
