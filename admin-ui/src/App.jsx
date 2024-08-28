@@ -53,11 +53,17 @@ const DrawerHeader = styled.div`
 `;
 
 const StyledSider = styled(Sider)`
-  background-color: ${({ theme }) => theme.menuBackground};
+  .ant-layout-sider {
+    background-color: ${({ theme }) => theme.menuBackground} !important;
+  }
+
+  .ant-menu {
+    background-color: ${({ theme }) => theme.menuBackground} !important;
+  }
   .ant-menu-item {
     color: ${({ theme }) => theme.textColor};
   }
-  
+
   .ant-menu-item-selected {
     background-color: ${({ theme }) => theme.menuSelectedBackground};
     color: ${({ theme }) => theme.menuSelectedColor};

@@ -1,6 +1,8 @@
+
+
 .wrap-check-61 input[type="checkbox"] {
     background-image: -webkit-linear-gradient(hsla(0, 0%, 0%, .1), hsla(0, 0%, 100%, .1)),
-        -webkit-linear-gradient(left, #f66 50%, #6cf 50%);
+        -webkit-linear-gradient(left, #f66 50%, rgb(53, 51, 51) 50%);
     background-size: 100% 100%, 200% 100%;
     background-position: 0 0, 15px 0;
     border-radius: 25px;
@@ -44,7 +46,7 @@
     height: 20px; /* Adjusting height for smaller screens */
     background-size: 100% 100%, 150% 100%;
     background-position: 0 0, 20px 0;
-     -webkit-tap-highlight-color: transparent;
+    
   }
 
   .wrap-check-61 input[type="checkbox"]:after {
