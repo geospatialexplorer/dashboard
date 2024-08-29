@@ -60,7 +60,12 @@ const cardStyle = {
   padding: "20px",
 };
 
-const Dashboard = ({ districtData, districtLoading }) => {
+const Dashboard = ({
+  districtData,
+  districtLoading,
+  healthData,
+  healthLoading,
+}) => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
@@ -134,7 +139,12 @@ const Dashboard = ({ districtData, districtLoading }) => {
           </Col>
         ))}
       </Row>
-      <OpenLayersMap districtData={districtData} districtLoading={districtLoading} />
+      <OpenLayersMap
+        districtData={districtData}
+        districtLoading={districtLoading}
+        healthData={healthData}
+        healthLoading={healthLoading}
+      />
     </div>
   );
 };

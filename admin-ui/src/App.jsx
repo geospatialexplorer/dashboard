@@ -103,6 +103,8 @@ const AppContent = () => {
           <Dashboard
             districtData={districtData}
             districtLoading={districtLoading}
+            healthData={healthData}
+            healthLoading={healthLoading}
           />
         );
       case "2":
