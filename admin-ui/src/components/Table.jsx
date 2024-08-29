@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Table, Card, Spin } from "antd";
-import { useGetHealthDataQuery } from "../services/Api";
 
 // Function to calculate averages for each state
 const calculateAverages = (districtsData) => {
   // Group districts by state
   const stateData = districtsData.reduce((acc, district) => {
-    const state = district.State.trim(); // Adjust based on your data field names
+    const state = district.State.trim();
     if (!acc[state]) {
       acc[state] = [];
     }
@@ -40,17 +39,16 @@ const calculateAverages = (districtsData) => {
   });
 };
 
-const StateTable = () => {
-  const { data: districtsData, error, isLoading } = useGetHealthDataQuery();
+const StateTable = ({ healthData, healthLoading, error }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (districtsData) {
-      console.log("Fetched Districts Data:", districtsData); // Log the fetched data
-      const averages = calculateAverages(districtsData);
+    if (healthData) {
+      console.log("Fetched Districts Data:", healthData); // Log the fetched data
+      const averages = calculateAverages(healthData);
       setData(averages);
     }
-  }, [districtsData]);
+  }, [healthData]);
 
   if (error) return <p>Error loading data.</p>;
 
@@ -92,25 +90,25 @@ const StateTable = () => {
       title: "Actual PM2.5",
       dataIndex: "Actual PM2.5",
       key: "actualPM2_5",
-      render: (text) => (text ? text.toFixed(2) : "N/A"),
+      render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
     },
     {
       title: "Reduced PM2.5",
       dataIndex: "Reduced PM2.5",
       key: "reducedPM2_5",
-      render: (text) => (text ? text.toFixed(2) : "N/A"),
+      render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
     },
     {
       title: "Actual Prevalence",
       dataIndex: "Actual prevalence",
       key: "actualPrevalence",
-      render: (text) => (text ? text.toFixed(2) : "N/A"),
+      render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
     },
     {
       title: "Reduced Prevalence",
       dataIndex: "Reduced prevalence",
       key: "reducedPrevalence",
-      render: (text) => (text ? text.toFixed(2) : "N/A"),
+      render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
     },
   ];
 
@@ -119,7 +117,7 @@ const StateTable = () => {
       <h2>
         <center>State-Wise Average Data with District-Level Information</center>
       </h2>
-      <Spin spinning={isLoading}>
+      <Spin spinning={healthLoading}>
         <Table
           dataSource={data}
           columns={stateColumns}
@@ -132,7 +130,7 @@ const StateTable = () => {
                 columns={districtColumns}
                 dataSource={record.districts}
                 pagination={false}
-                rowKey="id" // Ensure that the unique identifier for districts data is correctly referenced
+                rowKey="District" // Ensure that the unique identifier for districts data is correctly referenced
               />
             ),
           }}

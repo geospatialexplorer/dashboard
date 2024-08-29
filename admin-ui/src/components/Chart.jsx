@@ -19,24 +19,35 @@ ChartJS.register(
   Legend
 );
 
-const Chart = () => {
-  // Generate 40 labels for the data
-  const labels = Array.from({ length: 40 }, (_, i) => `Label ${i + 1}`);
+const Chart = ({ healthData, healthLoading }) => {
+  // Check if data is loading
+  if (healthLoading) {
+    return <p>Loading...</p>;
+  }
 
-  // Generate random data for two datasets
-  const data = {
+  // Check if healthData is available
+  if (!healthData || healthData.length === 0) {
+    return <p>No data available</p>;
+  }
+
+  // Generate labels and datasets
+  const labels = healthData.map((item) => item.District);
+  const dataset1 = healthData.map((item) => item["Actual prevalence"]);
+  const dataset2 = healthData.map((item) => item["Reduced prevalence"]);
+
+  const chartData = {
     labels,
     datasets: [
       {
-        label: "Dataset 1",
-        data: Array.from({ length: 40 }, () => Math.floor(Math.random() * 100)),
+        label: "Actual Prevalence",
+        data: dataset1,
         backgroundColor: "rgba(75, 192, 192, 0.6)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },
       {
-        label: "Dataset 2",
-        data: Array.from({ length: 40 }, () => Math.floor(Math.random() * 100)),
+        label: "Reduced Prevalence",
+        data: dataset2,
         backgroundColor: "rgba(153, 102, 255, 0.6)",
         borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 1,
@@ -46,7 +57,7 @@ const Chart = () => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // To control the aspect ratio manually
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top",
@@ -68,13 +79,8 @@ const Chart = () => {
   const chartWidth = visibleDataCount * 60; // 60px per data point
 
   return (
-    <div >
-      <h2
-        style={{
-          textAlign: "center",
-          
-        }}
-      >
+    <div>
+      <h2 style={{ textAlign: "center" }}>
         Dynamic Bar Chart Example
       </h2>
       <div
@@ -86,7 +92,7 @@ const Chart = () => {
         }}
       >
         <div style={{ width: `${chartWidth}px`, height: "100%" }}>
-          <Bar data={data} options={options} />
+          <Bar data={chartData} options={options} />
         </div>
       </div>
     </div>

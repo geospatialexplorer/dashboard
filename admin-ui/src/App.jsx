@@ -10,12 +10,11 @@ import {
 } from "@ant-design/icons";
 import styled from "styled-components";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
-
 import Dashboard from "./components/Dashboard";
 import Chart from "./components/Chart";
 import Tabledata from "./components/Table";
 import CheckboxComponent from "./components/button";
-import OpenLayersMap from "./components/OpenLayers";
+import { useGetDistrictDataQuery, useGetHealthDataQuery } from "./services/Api";
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -77,6 +76,9 @@ const AppContent = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
 
+  const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
+  const { data: healthData, isLoading: healthLoading } = useGetHealthDataQuery();
+
   const screens = useBreakpoint();
 
   const toggleSidebar = () => {
@@ -97,13 +99,33 @@ const AppContent = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case "1":
-        return <Dashboard />;
+        return (
+          <Dashboard
+            districtData={districtData}
+            districtLoading={districtLoading}
+          />
+        );
       case "2":
-        return <Chart />;
+        return (
+          <Chart
+            healthData={healthData}
+            healthLoading={healthLoading}
+          />
+        );
       case "3":
-        return <Tabledata/>;
+        return (
+          <Tabledata
+            healthData={healthData}
+            healthLoading={healthLoading}
+          />
+        );
       default:
-        return <Dashboard />;
+        return (
+          <Dashboard
+            districtData={districtData}
+            districtLoading={districtLoading}
+          />
+        );
     }
   };
 
@@ -140,7 +162,6 @@ const AppContent = () => {
 
   return (
     <StyledLayout>
-      {/* Render Drawer or Sider based on screen size */}
       {screens.xs ? (
         <Drawer
           placement="left"
@@ -189,7 +210,6 @@ const AppContent = () => {
           <CheckboxComponent toggleTheme={toggleTheme} />
         </StyledHeader>
         <StyledContent>{renderContent()}</StyledContent>
-        
       </Layout>
     </StyledLayout>
   );

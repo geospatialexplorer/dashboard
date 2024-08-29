@@ -5,87 +5,15 @@ import { Map, View } from "ol";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
 
-const OpenLayersMap = () => {
+const OpenLayersMap = ({districtData,districtLoading}) => {
   const [features, setFeatures] = useState([]);
   const [filteredFeatures, setFilteredFeatures] = useState([]);
   const [stateName, setStateName] = useState("");
   const [healthData, setHealthData] = useState([]);
   const mapRef = useRef(null);
   const vectorLayerRef = useRef(null);
+  console.log(districtData,'dd');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const supabaseUrl = "https://pdtmpyckpklkfikjvpnd.supabase.co";
-      const supabaseKey =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkdG1weWNrcGtsa2Zpa2p2cG5kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNDUwNDQyMywiZXhwIjoyMDQwMDgwNDIzfQ.FZxR7cZefz012P2knSzTaBHHrcSXFhrEcSsZOMxhPGk";
-      const tableName = "district";
-
-      const healthTableName = "health";
-
-      try {
-        const response = await fetch(
-          `${supabaseUrl}/rest/v1/${tableName}?select=*`,
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-
-          console.log(data, "geometry data");
-          const geoData = data.map((row) => ({
-            type: "Feature",
-            geometry: row.geom,
-            properties: row,
-          }));
-          setFeatures(geoData);
-
-          setFilteredFeatures(geoData); // Initially, show all features
-        } else {
-          console.error("Failed to fetch data:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-
-      try {
-        const response = await fetch(
-          `${supabaseUrl}/rest/v1/${healthTableName}?select=*`,
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: `Bearer ${supabaseKey}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-
-          // const geoData = data.map((row) => ({
-          //   type: "Feature",
-          //   geometry: row.geom,
-          //   properties: row,
-          // }));
-          setHealthData(data);
-
-          // setFilteredFeatures(geoData); // Initially, show all features
-        } else {
-          console.error("Failed to fetch data:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     // Initialize the map only once
