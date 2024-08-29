@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Card } from "antd";
+import { Table, Card, Spin } from "antd";
 import { useGetHealthDataQuery } from "../services/Api";
 
 // Function to calculate averages for each state
@@ -52,7 +52,6 @@ const StateTable = () => {
     }
   }, [districtsData]);
 
-  if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error loading data.</p>;
 
   const stateColumns = [
@@ -118,30 +117,29 @@ const StateTable = () => {
   return (
     <Card>
       <h2>
-        <center>
-          State-Wise Average Data with District-Level Information
-        </center>
+        <center>State-Wise Average Data with District-Level Information</center>
       </h2>
-      <Table
-        dataSource={data}
-        columns={stateColumns}
-        rowKey="state"
-        pagination={{ pageSize: 25 }}
-        scroll={{ x: "max-content" }} // Enables horizontal scrolling
-        expandable={{
-          expandedRowRender: (record) => (
-            <Table
-              columns={districtColumns}
-              dataSource={record.districts}
-              pagination={false}
-              rowKey="id" // Ensure that the unique identifier for districts data is correctly referenced
-            />
-          ),
-        }}
-      />
+      <Spin spinning={isLoading}>
+        <Table
+          dataSource={data}
+          columns={stateColumns}
+          rowKey="state"
+          pagination={{ pageSize: 25 }}
+          scroll={{ x: "max-content" }} // Enables horizontal scrolling
+          expandable={{
+            expandedRowRender: (record) => (
+              <Table
+                columns={districtColumns}
+                dataSource={record.districts}
+                pagination={false}
+                rowKey="id" // Ensure that the unique identifier for districts data is correctly referenced
+              />
+            ),
+          }}
+        />
+      </Spin>
     </Card>
   );
 };
 
 export default StateTable;
-
