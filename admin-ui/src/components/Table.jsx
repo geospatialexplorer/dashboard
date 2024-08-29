@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Table, Card, Spin, Input } from "antd";
+import { Table, Card, Spin, Input, Row, Col } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 const calculateAverages = (districtsData) => {
@@ -75,30 +75,35 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       dataIndex: "state",
       key: "state",
       sorter: (a, b) => a.state.localeCompare(b.state),
+      width: 200, // Set fixed width
     },
     {
       title: "Average Actual PM2.5",
       dataIndex: "averageActualPM2_5",
       key: "averageActualPM2_5",
       sorter: (a, b) => a.averageActualPM2_5 - b.averageActualPM2_5,
+      width: 200, // Set fixed width
     },
     {
       title: "Average Reduced PM2.5",
       dataIndex: "averageReducedPM2_5",
       key: "averageReducedPM2_5",
       sorter: (a, b) => a.averageReducedPM2_5 - b.averageReducedPM2_5,
+      width: 200, // Set fixed width
     },
     {
       title: "Average Actual Prevalence",
       dataIndex: "averageActualPrevalence",
       key: "averageActualPrevalence",
       sorter: (a, b) => a.averageActualPrevalence - b.averageActualPrevalence,
+      width: 200, // Set fixed width
     },
     {
       title: "Average Reduced Prevalence",
       dataIndex: "averageReducedPrevalence",
       key: "averageReducedPrevalence",
       sorter: (a, b) => a.averageReducedPrevalence - b.averageReducedPrevalence,
+      width: 200, // Set fixed width
     },
   ];
 
@@ -108,6 +113,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       dataIndex: "District",
       key: "district",
       sorter: (a, b) => a.District.localeCompare(b.District),
+      width: 200, // Set fixed width
     },
     {
       title: "Actual PM2.5",
@@ -115,6 +121,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       key: "actualPM2_5",
       render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
       sorter: (a, b) => a["Actual PM2.5"] - b["Actual PM2.5"],
+      width: 200, // Set fixed width
     },
     {
       title: "Reduced PM2.5",
@@ -122,6 +129,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       key: "reducedPM2_5",
       render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
       sorter: (a, b) => a["Reduced PM2.5"] - b["Reduced PM2.5"],
+      width: 200, // Set fixed width
     },
     {
       title: "Actual Prevalence",
@@ -129,6 +137,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       key: "actualPrevalence",
       render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
       sorter: (a, b) => a["Actual prevalence"] - b["Actual prevalence"],
+      width: 200, // Set fixed width
     },
     {
       title: "Reduced Prevalence",
@@ -136,37 +145,48 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       key: "reducedPrevalence",
       render: (text) => (text ? parseFloat(text).toFixed(2) : "N/A"),
       sorter: (a, b) => a["Reduced prevalence"] - b["Reduced prevalence"],
+      width: 200, // Set fixed width
     },
   ];
 
   return (
     <Card>
-      <h2>
-        <center>State-Wise Average Data with District-Level Information</center>
-      </h2>
-      <Input
-        placeholder="Search by state"
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-        style={{ marginBottom: 16, width: 300, padding:10, float: 'right' }}
-        prefix={<SearchOutlined />}
-      />
-      <Table
-        columns={stateColumns}
-        expandable={{
-          expandedRowRender: (record) => (
-            <Table
-              columns={districtColumns}
-              dataSource={record.districts}
-              pagination={false}
-            />
-          ),
-          rowExpandable: (record) => record.districts.length > 0,
-        }}
-        dataSource={filteredData}
-        loading={healthLoading ? <Spin size="large" /> : false}
-        rowKey={(record) => record.state}
-      />
+      <Row style={{justifyContent:"space-between"}}>
+        <Col xs={24} sm={16} md={12} lg={8}>
+          <h2>State-level averages</h2>
+        </Col>
+        <Col xs={24} sm={16} md={12} lg={8}>
+          <Input
+            placeholder="Search by state"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ marginBottom: 16,padding:10}}
+            prefix={<SearchOutlined />}
+          />
+        </Col>
+      </Row>
+      <div style={{ overflowX: "auto" }}>
+        {" "}
+        {/* Enable horizontal scroll here */}
+        <Table
+          columns={stateColumns}
+          expandable={{
+            expandedRowRender: (record) => (
+              <Table
+                columns={districtColumns}
+                dataSource={record.districts}
+                pagination={false}
+              />
+            ),
+            rowExpandable: (record) => record.districts.length > 0,
+          }}
+          dataSource={filteredData}
+          loading={healthLoading ? <Spin size="large" /> : false}
+          rowKey={(record) => record.state}
+          pagination={false} // Disable pagination for a single table view
+          scroll={{ x: 1000 }} // Set the scroll width as necessary
+        />
+      </div>
     </Card>
   );
 };
