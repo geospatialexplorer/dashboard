@@ -30,10 +30,20 @@ const Chart = ({ healthData, healthLoading }) => {
     return <p>No data available</p>;
   }
 
-  // Generate labels and datasets
-  const labels = healthData.map((item) => item.District);
-  const dataset1 = healthData.map((item) => item["Actual prevalence"]);
-  const dataset2 = healthData.map((item) => item["Reduced prevalence"]);
+  // Combine the labels and datasets into a single array of objects
+  const combinedData = healthData.map((item) => ({
+    label: item.District,
+    actualPrevalence: item["Actual prevalence"],
+    reducedPrevalence: item["Reduced prevalence"],
+  }));
+
+  // Sort the combined data by 'actualPrevalence' in descending order
+  combinedData.sort((a, b) => b.actualPrevalence - a.actualPrevalence);
+
+  // Separate the sorted data back into labels and datasets
+  const labels = combinedData.map((item) => item.label);
+  const dataset1 = combinedData.map((item) => item.actualPrevalence);
+  const dataset2 = combinedData.map((item) => item.reducedPrevalence);
 
   const chartData = {
     labels,
@@ -64,7 +74,7 @@ const Chart = ({ healthData, healthLoading }) => {
       },
       title: {
         display: true,
-        text: "Scrollable Bar Chart with 30 Data Points per View",
+        text: "Dummy Data Bar Chart",
       },
     },
     scales: {
@@ -74,9 +84,8 @@ const Chart = ({ healthData, healthLoading }) => {
     },
   };
 
-  // Set width to show only 30 data points at a time
   const visibleDataCount = 30;
-  const chartWidth = visibleDataCount * 60; // 60px per data point
+  const chartWidth = visibleDataCount * 1000; // Adjust width per data point
 
   return (
     <div>
