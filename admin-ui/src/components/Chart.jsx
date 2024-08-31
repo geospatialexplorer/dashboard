@@ -90,7 +90,7 @@ const Chart = ({ healthData, healthLoading }) => {
   return (
     <div>
       <h2 style={{ textAlign: "center" }}>
-        Dynamic Bar Chart Example
+        District wise bar plot for Disease prevalence according to NFHS data
       </h2>
       <div
         style={{

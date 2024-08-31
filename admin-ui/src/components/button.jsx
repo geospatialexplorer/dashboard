@@ -38,7 +38,7 @@ const CheckboxComponent = ({ theme, toggleTheme }) => {
             justifyContent: "center",
             marginRight: "28px",
             backgroundColor: checked ? "#333" : "#fff",
-            color: checked ? "#fff" : "yellow",
+            color: checked ? "#fff" : "orange",
             fontSize: "26px",
           }}
         >

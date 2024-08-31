@@ -27,21 +27,6 @@ const AnimatedCard = styled(animated(Card))`
   }
 `;
 
-const MoreInfoButton = styled.div`
-  background-color: rgba(0, 0, 0, 0.2);
-  color: white;
-  padding: 5px;
-  border-radius: 0 0 10px 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-`;
-
 const IconContainer = styled.div`
   font-size: 50px;
   color: rgba(255, 255, 255, 0.3);
@@ -74,28 +59,28 @@ const Dashboard = ({
 
   const cardsData = [
     {
-      title: "New Orders",
+      title: "Average Actual Prevalence",
       count: 150,
       color: "#00bfa5",
       icon: <ShoppingOutlined />,
       aosAnimation: "flip-left",
     },
     {
-      title: "Bounce Rate",
+      title: "Average Actual PM2.5",
       count: "53%",
       color: "#4caf50",
       icon: <LineChartOutlined />,
       aosAnimation: "fade-up",
     },
     {
-      title: "User Registrations",
+      title: "Average Reduced Prevalence",
       count: 44,
       color: "#ffca28",
       icon: <UserAddOutlined />,
       aosAnimation: "zoom-in",
     },
     {
-      title: "Unique Visitors",
+      title: "Average Reduced PM2.5",
       count: 65,
       color: "#f44336",
       icon: <PieChartOutlined />,
@@ -116,7 +101,7 @@ const Dashboard = ({
       <h1>Dashboard</h1>
       <Row gutter={[16, 16]}>
         {cardsData.map((card, index) => (
-          <Col key={index} xs={24} sm={12} md={8} lg={6}>
+          <Col key={index} >
             <AnimatedCard
               data-aos={card.aosAnimation}
               style={{ backgroundColor: card.color, ...props }}
@@ -134,9 +119,6 @@ const Dashboard = ({
                 </TextContent>
                 <IconContainer>{card.icon}</IconContainer>
               </CardContent>
-              <MoreInfoButton>
-                More info <ArrowRightOutlined style={{ marginLeft: "5px" }} />
-              </MoreInfoButton>
             </AnimatedCard>
           </Col>
         ))}
@@ -149,7 +131,7 @@ const Dashboard = ({
       />
       <Chart healthData={healthData} healthLoading={healthLoading} />
       <div style={{paddingTop:"100px"}}>
-      <StateTable healthDatas={healthData} healthLoading={healthLoading} />
+        <StateTable healthData={healthData} healthLoading={healthLoading}/>
       </div>
     </div>
   );

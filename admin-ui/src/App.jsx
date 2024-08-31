@@ -16,6 +16,7 @@ import Tabledata from "./components/Table";
 import CheckboxComponent from "./components/button";
 import { useGetDistrictDataQuery, useGetHealthDataQuery } from "./services/Api";
 import OpenLayersMap from "./components/CombinedMap.jsx";
+import logo from '/logo.png';
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -24,6 +25,7 @@ const StyledLayout = styled(Layout)`
   height: 100vh;
   overflow: hidden;
   background-color: ${({ theme }) => theme.backgroundColor};
+  margin:0;
 `;
 
 const StyledHeader = styled(Header)`
@@ -33,11 +35,11 @@ const StyledHeader = styled(Header)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px; /* Fixed height for header */
+  height: 80px; /* Fixed height for header */
 `;
 
 const StyledContent = styled(Content)`
-  margin: 24px 16px;
+  margin: 24px 16px;  // if here set 0 means layout border none................
   padding: 24px;
   min-height: 400px;
   background: ${({ theme }) => theme.backgroundColor};
@@ -56,10 +58,12 @@ const DrawerHeader = styled.div`
 const StyledSider = styled(Sider)`
   .ant-layout-sider {
     background-color: ${({ theme }) => theme.menuBackground} !important;
+    padding: 0;
   }
 
   .ant-menu {
     background-color: ${({ theme }) => theme.menuBackground} !important;
+    padding: 0;
   }
   .ant-menu-item {
     color: ${({ theme }) => theme.textColor};
@@ -73,7 +77,7 @@ const StyledSider = styled(Sider)`
 
 const AppContent = () => {
   const { theme, toggleTheme } = useTheme();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
 
@@ -135,11 +139,19 @@ const AppContent = () => {
   };
 
   const renderMenu = () => (
+    <>
+      <div style={{ padding: "16px", textAlign: "center" }}>
+      <img
+        src={logo}
+        alt="Logo"
+        style={{ maxWidth: "100%",height:"auto" }} 
+      />
+    </div>
     <Menu
       theme={theme === "dark" ? "dark" : "light"}
       mode="inline"
       selectedKeys={[selectedMenu]}
-      style={{ height: "100%", paddingTop: "60px" }}
+      style={{ height: "100%", paddingTop: "0" }}
     >
       <Menu.Item
         key="1"
@@ -170,6 +182,7 @@ const AppContent = () => {
         Table
       </Menu.Item>
     </Menu>
+    </>
   );
 
   return (

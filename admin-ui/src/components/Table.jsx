@@ -153,7 +153,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
     <Card>
       <Row style={{justifyContent:"space-between"}}>
         <Col xs={24} sm={16} md={12} lg={8}>
-          <h2>State-level averages</h2>
+          <h2>Disease prevalence according to NFHS and PM2.5 concentration</h2>
         </Col>
         <Col xs={24} sm={16} md={12} lg={8}>
           <Input
@@ -175,7 +175,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
               <Table
                 columns={districtColumns}
                 dataSource={record.districts}
-                pagination={false}
+                pagination={{pageSize: 10}}
               />
             ),
             rowExpandable: (record) => record.districts.length > 0,
@@ -183,7 +183,7 @@ const StateTable = ({ healthData, healthLoading, error }) => {
           dataSource={filteredData}
           loading={healthLoading ? <Spin size="large" /> : false}
           rowKey={(record) => record.state}
-          pagination={false} // Disable pagination for a single table view
+          pagination={{pageSize: 10}} // Disable pagination for a single table view
           scroll={{ x: 1000 }} // Set the scroll width as necessary
         />
       </div>
