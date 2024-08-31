@@ -5,6 +5,18 @@ import { Map, View } from "ol";
 import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
 import { Style, Fill, Stroke } from "ol/style";
+import {
+  Row,
+  Col,
+  Checkbox,
+  Card,
+  Form,
+  Input,
+  Button,
+  Spin,
+  Space,
+} from "antd";
+import { ExpandOutlined, CompressOutlined } from "@ant-design/icons";
 
 const OpenLayersMap = () => {
   const [features, setFeatures] = useState([]);
@@ -13,6 +25,10 @@ const OpenLayersMap = () => {
   const [uniqueStates, setUniqueStates] = useState([]);
   const [selectedStates, setSelectedStates] = useState([]);
   const [selectedDiseases, setSelectedDiseases] = useState([]);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedState, setSelectedState] = useState(null);
+   const [selectedDisease, setSelectedDisease] = useState(null);
+   const [selectedGender, setSelectedGender] = useState(null);
 
   const mapRef = useRef(null);
   const vectorLayerRef = useRef(null);
@@ -27,14 +43,55 @@ const OpenLayersMap = () => {
 
   const gender = ["Men", "Women"];
 
-  const handleStateChange = (event) => {
-    const state = event.target.value;
-    setSelectedStates((prevState) =>
-      prevState.includes(state)
-        ? prevState.filter((item) => item !== state)
-        : [...prevState, state]
-    );
+  const toggleMapSize = () => {
+    setIsExpanded(!isExpanded);
   };
+
+    const handleDiseaseChange = (e) => {
+      const value = e.target.value;
+      if (selectedDisease === value) {
+        setSelectedDisease(null); // Deselect if already selected
+      } else {
+        setSelectedDisease(value); // Select the clicked checkbox
+      }
+    };
+
+     const handleGenderChange = (e) => {
+       const value = e.target.value;
+       if (selectedGender === value) {
+         setSelectedGender(null); // Deselect if already selected
+       } else {
+         setSelectedGender(value); // Select the clicked checkbox
+       }
+     };
+
+  const handleStateChange = (e) => {
+    const value = e.target.value;
+    if (selectedState === value) {
+      setSelectedState(null); // Deselect if already selected
+    } else {
+      setSelectedState(value); // Select the clicked checkbox
+    }
+  };
+    const handleFilterClick = () => {
+      const selectedValues = [
+        selectedState,
+        selectedDisease,
+         selectedGender,
+      ];
+      console.log(selectedValues,'selectedValues');
+
+      getMapData(healthData, features, selectedDisease, selectedState, selectedGender)
+    };
+
+  // const handleStateChange = (event) => {
+  //   const state = event.target.value;
+  //   setSelectedStates((prevState) =>
+  //     prevState.includes(state)
+  //       ? prevState.filter((item) => item !== state)
+  //       : [...prevState, state]
+  //   );
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -208,7 +265,7 @@ const OpenLayersMap = () => {
     }
   }, [filteredFeatures]);
 
-  useEffect(() => {
+  const getMapData=(healthData,features,disease,state,gender) => {
     if (healthData.length > 0 && features.length > 0) {
       const filterdDisease = healthData.filter((feature) => {
         return (
@@ -247,54 +304,117 @@ const OpenLayersMap = () => {
 
       //   console.log(combinedData);
     }
-  }, [healthData, features, selectedStates, selectedDiseases]);
+  }
 
   return (
     <div>
-      <div>
-        <div
+      <div
+        style={{
+          marginBottom: "20px",
+          marginTop: "50px",
+          boxShadow: "2px 3px 8px #ccc",
+        }}
+      >
+        <Row gutter={16}>
+          <Col xs={24} sm={24} md={8}>
+            <Card
+              title="State"
+              bordered
+              style={{ height: "100%" }}
+              bodyStyle={{ maxHeight: "200px", overflowY: "auto" }}
+            >
+              {uniqueStates.map((state, index) => (
+                <div key={index}>
+                  <Checkbox
+                    value={state}
+                    onChange={handleStateChange}
+                    disabled={selectedState && selectedState !== state}
+                    checked={selectedState === state}
+                  >
+                    {state}
+                  </Checkbox>
+                  <br />
+                </div>
+              ))}
+            </Card>
+          </Col>
+          <Col xs={24} sm={24} md={8}>
+            <Card
+              title="Disease"
+              bordered
+              style={{ height: "100%" }}
+              bodyStyle={{ display: "flex", flexDirection: "column" }}
+            >
+              {diseases.map((disease, index) => (
+                <div key={index}>
+                  <Checkbox
+                    value={disease}
+                    onChange={handleDiseaseChange}
+                    disabled={selectedDisease && selectedDisease !== disease}
+                    checked={selectedDisease === disease}
+                  >
+                    {disease}
+                  </Checkbox>
+                  <br />
+                </div>
+              ))}
+            </Card>
+          </Col>
+          <Col xs={24} sm={24} md={8}>
+            <Card
+              title="Gender"
+              bordered
+              style={{ height: "100%" }}
+              bodyStyle={{ display: "flex", flexDirection: "column" }}
+            >
+              {gender.map((gen) => (
+                <div key={gen}>
+                  <Checkbox
+                    value={gen}
+                    onChange={handleGenderChange}
+                    disabled={selectedGender && selectedGender !== gen}
+                    checked={selectedGender === gen}
+                  >
+                    {gen}
+                  </Checkbox>
+                  <br />
+                </div>
+              ))}
+
+              <Button
+                onClick={handleFilterClick}
+                type="dashed"
+                style={{ marginTop: "70px" }}
+              >
+             Submit
+              </Button>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+      <div style={{ position: "relative", marginBottom: "20px" }}>
+        <Button
+          onClick={toggleMapSize}
+          icon={isExpanded ? <CompressOutlined /> : <ExpandOutlined />}
           style={{
-            maxHeight: "200px",
-            overflowY: "auto",
-            border: "1px solid #ccc",
-            padding: "10px",
-            display: "flex",
-            flexDirection: "column",
+            position: "absolute",
+            bottom: "10px",
+            left: "10px",
+            zIndex: 1000,
           }}
         >
-          <h3>States</h3>
-          {uniqueStates.map((state) => (
-            <label key={state}>
-              <input
-                type="checkbox"
-                value={state}
-                checked={selectedStates.includes(state)}
-                onChange={handleStateChange}
-              />
-              {state}
-            </label>
-          ))}
-        </div>
-        <div>
-          <h3>Disease</h3>
-          {diseases.map((disease) => (
-            <label key={disease}>
-              <input type="checkbox" value={disease} />
-              {disease}
-            </label>
-          ))}
-        </div>
-        <div>
-          <h3>Gender</h3>
-          {gender.map((gen) => (
-            <label key={gen}>
-              <input type="checkbox" value={gen} />
-              {gen}
-            </label>
-          ))}
-        </div>
+          {isExpanded ? "Collapse" : "Expand"}
+        </Button>
+
+        <div
+          id="map"
+          style={{
+            width: isExpanded ? "100%" : "50%",
+            height: "400px",
+            transition: "width 0.3s ease",
+          }}
+        ></div>
       </div>
-      <div id="map" style={{ width: "100%", height: "80vh" }}></div>
     </div>
   );
 };

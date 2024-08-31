@@ -11,7 +11,9 @@ import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import OpenLayersMap from "./OpenLayers";
+import CombinedMaps from "./CombinedMap";
+import Chart from "./Chart";
+import StateTable from "./Table";
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
@@ -139,12 +141,16 @@ const Dashboard = ({
           </Col>
         ))}
       </Row>
-      <OpenLayersMap
+      <CombinedMaps
         districtData={districtData}
         districtLoading={districtLoading}
         healthData={healthData}
         healthLoading={healthLoading}
       />
+      <Chart healthData={healthData} healthLoading={healthLoading} />
+      <div style={{paddingTop:"100px"}}>
+      <StateTable healthDatas={healthData} healthLoading={healthLoading} />
+      </div>
     </div>
   );
 };

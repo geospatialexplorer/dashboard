@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Layout, Menu, Button, Grid, Drawer } from "antd";
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
+  MenuOutlined,
   DashboardOutlined,
   BarChartOutlined,
-  SettingOutlined,
+  DatabaseOutlined,
   CloseOutlined,
 } from "@ant-design/icons";
+import MapIcon from "@mui/icons-material/Map";
 import styled from "styled-components";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 import Dashboard from "./components/Dashboard";
@@ -15,6 +15,7 @@ import Chart from "./components/Chart";
 import Tabledata from "./components/Table";
 import CheckboxComponent from "./components/button";
 import { useGetDistrictDataQuery, useGetHealthDataQuery } from "./services/Api";
+import OpenLayersMap from "./components/CombinedMap.jsx";
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -121,6 +122,8 @@ const AppContent = () => {
             healthLoading={healthLoading}
           />
         );
+        case "4":
+          return <OpenLayersMap />;
       default:
         return (
           <Dashboard
@@ -146,6 +149,13 @@ const AppContent = () => {
         Dashboard
       </Menu.Item>
       <Menu.Item
+        key="4"
+        icon={<MapIcon style={{ fontSize: "18px" }} />}
+        onClick={() => handleMenuClick("4")}
+      >
+        Maps
+      </Menu.Item>
+      <Menu.Item
         key="2"
         icon={<BarChartOutlined />}
         onClick={() => handleMenuClick("2")}
@@ -154,7 +164,7 @@ const AppContent = () => {
       </Menu.Item>
       <Menu.Item
         key="3"
-        icon={<SettingOutlined />}
+        icon={<DatabaseOutlined />}
         onClick={() => handleMenuClick("3")}
       >
         Table
@@ -200,15 +210,12 @@ const AppContent = () => {
           <Button
             type="text"
             icon={
-              collapsed || drawerVisible ? (
-                <MenuUnfoldOutlined />
-              ) : (
-                <MenuFoldOutlined />
-              )
+              collapsed || drawerVisible ? <MenuOutlined /> : <MenuOutlined />
             }
             onClick={toggleSidebar}
             style={{ fontSize: "16px", color: theme.textColor }}
           />
+          <center><h1>Health and Air Quality Dashboard </h1></center>
           <CheckboxComponent toggleTheme={toggleTheme} />
         </StyledHeader>
         <StyledContent>{renderContent()}</StyledContent>
