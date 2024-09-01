@@ -75,6 +75,12 @@ const StyledSider = styled(Sider)`
   }
 `;
 
+const LogoContainer = styled.div`
+  padding: 16px;
+  text-align: center;
+  background-color: ${({ theme }) => theme === "dark" ? "#111d2c" : "white"}; /* Dark background for dark theme */
+`;
+
 const AppContent = () => {
   const { theme, toggleTheme } = useTheme();
   const [collapsed, setCollapsed] = useState(true);
@@ -140,13 +146,13 @@ const AppContent = () => {
 
   const renderMenu = () => (
     <>
-      <div style={{ padding: "16px", textAlign: "center" }}>
-      <img
-        src={logo}
-        alt="Logo"
-        style={{ maxWidth: "100%",height:"auto" }} 
-      />
-    </div>
+       <LogoContainer theme={theme}>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ maxWidth: "100%", height: "auto" }} 
+        />
+      </LogoContainer>
     <Menu
       theme={theme === "dark" ? "dark" : "light"}
       mode="inline"

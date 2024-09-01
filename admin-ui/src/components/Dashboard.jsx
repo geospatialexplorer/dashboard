@@ -45,7 +45,16 @@ const TextContent = styled.div`
 const cardStyle = {
   color: "white",
   padding: "20px",
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
 };
+const cardContainerStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+};
+
 
 const Dashboard = ({
 
@@ -69,21 +78,21 @@ const Dashboard = ({
       count: "53%",
       color: "#4caf50",
       icon: <LineChartOutlined />,
-      aosAnimation: "fade-up",
+      aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced Prevalence",
       count: 44,
       color: "#ffca28",
       icon: <UserAddOutlined />,
-      aosAnimation: "zoom-in",
+      aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced PM2.5",
       count: 65,
       color: "#f44336",
       icon: <PieChartOutlined />,
-      aosAnimation: "flip-right",
+      aosAnimation: "flip-left",
     },
   ];
 
@@ -98,30 +107,29 @@ const Dashboard = ({
   return (
     <div>
       <h1>Dashboard</h1>
-      <Row gutter={[16, 16]}>
+      <div style={cardContainerStyle}>
         {cardsData.map((card, index) => (
-          <Col key={index} >
-            <AnimatedCard
-              data-aos={card.aosAnimation}
-              style={{ backgroundColor: card.color, ...props }}
-              hoverable
-              bodyStyle={cardStyle}
-            >
-              <CardContent>
-                <TextContent>
-                  <div style={{ fontSize: "24px", fontWeight: "bold" }}>
-                    {card.count}
-                  </div>
-                  <div style={{ fontSize: "16px", marginBottom: "10px" }}>
-                    {card.title}
-                  </div>
-                </TextContent>
-                <IconContainer>{card.icon}</IconContainer>
-              </CardContent>
-            </AnimatedCard>
-          </Col>
+          <AnimatedCard
+            key={index}
+            data-aos={card.aosAnimation}
+            style={{ backgroundColor: card.color, ...props, flex: 1, margin: "10px" }}
+            hoverable
+            bodyStyle={cardStyle}
+          >
+            <CardContent>
+              <TextContent>
+                <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+                  {card.count}
+                </div>
+                <div style={{ fontSize: "16px", marginBottom: "10px" }}>
+                  {card.title}
+                </div>
+              </TextContent>
+              <IconContainer>{card.icon}</IconContainer>
+            </CardContent>
+          </AnimatedCard>
         ))}
-      </Row>
+      </div>
       <CombinedMaps
        
       />
