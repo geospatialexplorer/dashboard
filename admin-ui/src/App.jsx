@@ -39,7 +39,7 @@ const StyledHeader = styled(Header)`
 `;
 
 const StyledContent = styled(Content)`
-  margin: 24px 16px;  // if here set 0 means layout border none................
+  margin: 24px 16px; 
   padding: 24px;
   min-height: 400px;
   background: ${({ theme }) => theme.backgroundColor};
@@ -78,7 +78,7 @@ const StyledSider = styled(Sider)`
 const LogoContainer = styled.div`
   padding: 16px;
   text-align: center;
-  background-color: ${({ theme }) => theme === "dark" ? "#111d2c" : "white"}; /* Dark background for dark theme */
+  background-color: ${({ theme }) => theme === "dark" ? "#111d2c" : "white"}; 
 `;
 
 const AppContent = () => {
