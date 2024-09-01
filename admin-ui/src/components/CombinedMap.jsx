@@ -317,10 +317,11 @@ const OpenLayersMap = () => {
             height: "400px",
             width: isExpanded ? "100%" : "50%",
             boxShadow: "2px 3px 8px #ccc",
+            transition: "all 0.3s"
           }}
         />
         <Button
-          type="primary"
+          type="default"
           size="large"
           onClick={toggleMapSize}
           icon={isExpanded ? <CompressOutlined /> : <ExpandOutlined />}

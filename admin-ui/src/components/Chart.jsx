@@ -85,16 +85,16 @@ const Chart = ({ healthData, healthLoading }) => {
   };
 
   const visibleDataCount = 30;
-  const chartWidth = visibleDataCount * 1000; // Adjust width per data point
+  const chartWidth = visibleDataCount * 1000; 
 
   return (
-    <div>
+    <div style={{paddingTop:"60px"}}>
       <h2 style={{ textAlign: "center" }}>
         District wise bar plot for Disease prevalence according to NFHS data
       </h2>
       <div
         style={{
-          marginTop: "60px",
+          marginTop: "30px",
           width: "100%",
           overflowX: "scroll",
           height: "calc(70vh - 60px)",
