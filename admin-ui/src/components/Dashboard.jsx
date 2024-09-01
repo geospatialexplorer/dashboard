@@ -48,8 +48,7 @@ const cardStyle = {
 };
 
 const Dashboard = ({
-  districtData,
-  districtLoading,
+
   healthData,
   healthLoading,
 }) => {
@@ -124,10 +123,7 @@ const Dashboard = ({
         ))}
       </Row>
       <CombinedMaps
-        districtData={districtData}
-        districtLoading={districtLoading}
-        healthData={healthData}
-        healthLoading={healthLoading}
+       
       />
       <Chart healthData={healthData} healthLoading={healthLoading} />
       <div style={{paddingTop:"100px"}}>
