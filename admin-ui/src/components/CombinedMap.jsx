@@ -20,15 +20,24 @@ const OpenLayersMap = () => {
   const [selectedState, setSelectedState] = useState(null);
   const [selectedDisease, setSelectedDisease] = useState(null);
   const [selectedGender, setSelectedGender] = useState(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+   const [isMap1Expanded, setIsMap1Expanded] = useState(false);
+   const [isMap2Expanded, setIsMap2Expanded] = useState(false);
+  
 
   const { data: districtData, isLoading: districtLoading } =
     useGetDistrictDataQuery();
   const { data: healthData, isLoading: healthLoading } =
     useGetHealthDataQuery();
+    
+
+    
 
   const mapRef = useRef(null);
+  const reducedMapRef = useRef(null);
   const vectorLayerRef = useRef(null);
+  const reducedLayerRef = useRef(null);
+
+     
 
   const diseases = [
     "Diabetes",
@@ -40,9 +49,16 @@ const OpenLayersMap = () => {
 
   const gender = ["Men", "Women"];
 
-  const toggleMapSize = () => {
-    setIsExpanded(!isExpanded);
-  };
+   const toggleMap1Size = () => {
+     setIsMap1Expanded(!isMap1Expanded);
+     setIsMap2Expanded(false); // Collapse Map 2 when Map 1 is expanded
+   };
+
+   const toggleMap2Size = () => {
+     setIsMap2Expanded(!isMap2Expanded);
+     setIsMap1Expanded(false); // Collapse Map 1 when Map 2 is expanded
+   };
+
 
   const handleDiseaseChange = (e) => {
     const value = e.target.value;
@@ -69,6 +85,14 @@ const OpenLayersMap = () => {
     );
   };
 
+  const handleResetClick = () => {
+    setSelectedDisease(null);
+    setSelectedGender(null);
+    setSelectedState(null);
+    setFilteredFeatures(features);
+   
+  }
+
   useEffect(() => {
     if (districtData) {
       const geoData = districtData.map((row) => ({
@@ -82,8 +106,12 @@ const OpenLayersMap = () => {
   }, [districtData]);
 
   useEffect(() => {
-    if (!mapRef.current) {
+    if (!mapRef.current || !reducedMapRef) {
       vectorLayerRef.current = new VectorLayer({
+        source: new VectorSource(),
+      });
+
+      reducedLayerRef.current = new VectorLayer({
         source: new VectorSource(),
       });
 
@@ -94,6 +122,21 @@ const OpenLayersMap = () => {
             source: new OSM(),
           }),
           vectorLayerRef.current,
+        ],
+        view: new View({
+          center: [0, 0],
+          zoom: 2,
+          projection: "EPSG:4326",
+        }),
+      });
+
+      reducedMapRef.current = new Map({
+        target: "reducedMap",
+        layers: [
+          new TileLayer({
+            source: new OSM(),
+          }),
+          reducedLayerRef.current,
         ],
         view: new View({
           center: [0, 0],
@@ -113,15 +156,34 @@ const OpenLayersMap = () => {
         })
       );
 
+          const reducedVectorSource = reducedLayerRef.current.getSource();
+          reducedVectorSource.clear();
+          reducedVectorSource.addFeatures(
+            new GeoJSON().readFeatures({
+              type: "FeatureCollection",
+              features: filteredFeatures,
+            })
+          );
+
       vectorSource.getFeatures().forEach((feature) => {
         const prevalenceValue = feature.get("Actual prevalence");
         const style = getFeatureStyle(prevalenceValue);
         feature.setStyle(style);
       });
 
+        reducedVectorSource.getFeatures().forEach((feature) => {
+          const prevalenceValue = feature.get("Reduced prevalence");
+          const style = getFeatureStyle(prevalenceValue);
+          feature.setStyle(style);
+        });
+
       const extent = vectorSource.getExtent();
       mapRef.current.getView().fit(extent, {
         size: mapRef.current.getSize(),
+        maxZoom: 10,
+      });
+      reducedMapRef.current.getView().fit(extent, {
+        size: reducedMapRef.current.getSize(),
         maxZoom: 10,
       });
     }
@@ -187,42 +249,73 @@ const OpenLayersMap = () => {
       });
     }
   };
+  const calculateAverage = (dataArray, property) => {
+    if (dataArray.length === 0) return 0;
 
-  const getMapData = (healthData, features, disease, state, gender) => {
-    if (healthData?.length > 0 && features?.length > 0) {
-      const filterdDisease = healthData.filter((feature) => {
-        return (
-          feature.Disease === disease &&
-          feature.State.trim().toLowerCase() === state?.trim().toLowerCase()
-        );
-      });
+    const values = dataArray
+      .map((item) => parseFloat(item.properties?.[property]))
+      .filter((value) => !isNaN(value));
 
-      const filterByState = (data, stateName) => {
-        return data.filter((item) => item.properties.statename === stateName);
-      };
+    const sum = values.reduce((acc, value) => acc + value, 0);
 
-      const geomData = filterByState(features, state);
+    const Average = values.length > 0 ? sum / values.length : 0;
 
-      const combinedData = geomData.map((featureRecord) => {
-        const matchingHealth = filterdDisease.find(
-          (health) =>
-            health.District.trim().toLowerCase() ===
-            featureRecord.properties.district.trim().toLowerCase()
-        );
-
-        if (matchingHealth) {
-          featureRecord.properties = {
-            ...featureRecord.properties,
-            ...matchingHealth,
-          };
-        }
-
-        return featureRecord;
-      });
-
-      setFilteredFeatures(combinedData);
-    }
+    return Average.toFixed(2);
   };
+
+ const getMapData = (healthData, features, disease, state, gender) => {
+   if (healthData.length > 0 && features.length > 0) {
+     const filterdDisease = healthData.filter((feature) => {
+       return (
+         feature.Disease === disease &&
+         feature.State.trim().toLowerCase() === state?.trim().toLowerCase()
+       );
+     });
+
+     const filterByState = (data, stateName) => {
+       return data.filter((item) => item.properties.statename === stateName);
+     };
+
+     const geomData = filterByState(features, state);
+
+     const combinedData = geomData.map((featureRecord) => {
+       const matchingHealth = filterdDisease.find(
+         (health) =>
+           health.District.trim().toLowerCase() ===
+           featureRecord.properties.district.trim().toLowerCase()
+       );
+
+       if (matchingHealth) {
+         featureRecord.properties = matchingHealth;
+       }
+
+       return featureRecord;
+     });
+
+     console.log(combinedData, "Combined Data");
+
+     setFilteredFeatures(combinedData);
+
+   
+
+     
+    const averageActualPrevalence = calculateAverage(combinedData,"Actual prevalence");
+    const averageReducedPrevalence = calculateAverage(combinedData,"Reduced prevalence");
+
+    const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
+    const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
+
+     console.log("Average Actual Prevalence:", averageActualPrevalence);
+     console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+     console.log("Average Reduced PM2.5:", averageReducedTwo);
+     console.log("Average Actual PM2.5:", averageActualTwo);
+   }
+ };
+
+   
+    
+   
+ 
 
   return (
     <div>
@@ -246,7 +339,7 @@ const OpenLayersMap = () => {
                   <Checkbox
                     value={state}
                     onChange={handleStateChange}
-                    disabled={selectedState && selectedState !== state}
+                    // disabled={selectedState && selectedState !== state}
                     checked={selectedState === state}
                   >
                     {state}
@@ -298,37 +391,83 @@ const OpenLayersMap = () => {
                   <br />
                 </div>
               ))}
-              <Button
-                type="dashed"
-                
-                onClick={handleFilterClick}
-                style={{ position: "absolute", bottom:"10px"}}
-              >
-                Filter
-              </Button>
+              <div>
+                <Button
+                  type="dashed"
+                  onClick={handleResetClick}
+                  style={{ position: "absolute", bottom: "10px" }}
+                >
+                  Reset
+                </Button>
+                <Button
+                  type="primary"
+                  onClick={handleFilterClick}
+                  style={{ position: "absolute", bottom: "10px", left:'100px' }}
+                >
+                  Filter
+                </Button>
+              </div>
             </Card>
           </Col>
         </Row>
       </div>
-      <div style={{ position: "relative" }}>
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        {/* Map 1 */}
         <div
           id="map"
           style={{
             height: "400px",
-            width: isExpanded ? "100%" : "50%",
+            width: isMap1Expanded ? "100%" : "45%",
+            marginRight: isMap1Expanded ? "0" : "10%",
             boxShadow: "2px 3px 8px #ccc",
-            transition: "all 0.3s"
+            transition: "all 0.5s",
+            display: "inline-block",
+            verticalAlign: "top",
           }}
         />
+
+        <div
+          id="reducedMap"
+          style={{
+            height: "400px",
+            width: isMap2Expanded ? "100%" : "45%",
+
+            marginLeft: isMap2Expanded ? "0" : "10%",
+            boxShadow: "2px 3px 8px #ccc",
+            transition: "all 0.5s",
+            display: "inline-block",
+          }}
+        />
+
+        {/* Map 1 Expand/Collapse Button */}
         <Button
           type="default"
           size="large"
-          onClick={toggleMapSize}
-          icon={isExpanded ? <CompressOutlined /> : <ExpandOutlined />}
+          onClick={toggleMap1Size}
+          icon={isMap1Expanded ? <CompressOutlined /> : <ExpandOutlined />}
           style={{
             position: "absolute",
             bottom: "10px",
             left: "10px",
+            zIndex: 1000,
+          }}
+        />
+
+        <Button
+          type="default"
+          size="large"
+          onClick={toggleMap2Size}
+          icon={isMap2Expanded ? <CompressOutlined /> : <ExpandOutlined />}
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
             zIndex: 1000,
           }}
         />
