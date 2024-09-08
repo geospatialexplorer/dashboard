@@ -7,10 +7,7 @@ import { OSM, Vector as VectorSource } from "ol/source";
 import { Style, Fill, Stroke } from "ol/style";
 import { Row, Col, Checkbox, Card, Button } from "antd";
 import { ExpandOutlined, CompressOutlined } from "@ant-design/icons";
-import {
-  useGetDistrictDataQuery,
-  useGetHealthDataQuery,
-} from "../services/Api";
+import { useGetDistrictDataQuery, useGetHealthDataQuery } from "../services/Api";
 import Overlay from "ol/Overlay.js";
 import LegendComponent from "./Legend";
 import "../index.css";
@@ -30,10 +27,8 @@ const OpenLayersMap = ({onPassAverages}) => {
   const [isMap1Expanded, setIsMap1Expanded] = useState(false);
   const [isMap2Expanded, setIsMap2Expanded] = useState(false);
 
-  const { data: districtData, isLoading: districtLoading } =
-    useGetDistrictDataQuery();
-  const { data: healthData, isLoading: healthLoading } =
-    useGetHealthDataQuery();
+  const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
+  const { data: healthData, isLoading: healthLoading } = useGetHealthDataQuery();
 
   const mapRef = useRef(null);
   const reducedMapRef = useRef(null);
@@ -90,6 +85,26 @@ const OpenLayersMap = ({onPassAverages}) => {
     setSelectedGender(null);
     setSelectedState(null);
     setFilteredFeatures(features);
+
+    // Hide both popups
+    mapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
+    reducedMapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
+
+    // Reset feature styles on the map
+    const vectorSource = vectorLayerRef.current.getSource();
+    // vectorSource.clear();
+    vectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(null); // Removes custom styling, reverting to default
+    });
+
+    const reducedVectorSource = reducedLayerRef.current.getSource();
+    reducedVectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(null); // Removes custom styling, reverting to default
+    });
   };
 
   useEffect(() => {
@@ -138,7 +153,7 @@ const OpenLayersMap = ({onPassAverages}) => {
         },
       });
 
-      // Create an overlay for the popup
+      // Create an overlay for the reduced popup
       const reducedOverlay = new Overlay({
         element: reducedPopupRef.current,
         autoPan: true,
@@ -163,7 +178,6 @@ const OpenLayersMap = ({onPassAverages}) => {
       });
 
       mapRef.current.addOverlay(overlay);
-
       reducedMapRef.current.addOverlay(reducedOverlay);
 
       // Handle map click events
@@ -173,22 +187,19 @@ const OpenLayersMap = ({onPassAverages}) => {
           (feat) => feat
         );
         if (feature) {
-          // Get feature properties and update popup content
           const properties = feature.getProperties();
-
-          console.log(properties);
           setPopupContent(
-            `Actual Prevalance: ${properties["Actual prevalence"]}, Reduced Prevalance: ${properties["Reduced prevalence"]}`
+            `<div>
+              <div>District: ${properties["district"]}</div>
+              <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
+              <div>Reduced Prevalence: ${properties["Reduced prevalence"]}</div>
+            </div>`
           );
-
-          // Show the popup at the clicked location
           overlay.setPosition(event.coordinate);
         } else {
-          overlay.setPosition(undefined); // Hide the popup if no feature is clicked
+          overlay.setPosition(undefined);
         }
       });
-
-      //reduced map overlay
 
       // Handle map click events on reduced map
       reducedMapRef.current.on("singleclick", function (event) {
@@ -197,18 +208,17 @@ const OpenLayersMap = ({onPassAverages}) => {
           (feat) => feat
         );
         if (feature) {
-          // Get feature properties and update popup content
           const properties = feature.getProperties();
-
-          console.log(properties);
           setReducedPopupContent(
-            `Actual Prevalance: ${properties["Actual prevalence"]}, Reduced Prevalance: ${properties["Reduced prevalence"]}`
+            `<div>
+              <div>District: ${properties["district"]}</div>
+              <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
+              <div>Reduced Prevalence: ${properties["Reduced prevalence"]}</div>
+            </div>`
           );
-
-          // Show the popup at the clicked location
           reducedOverlay.setPosition(event.coordinate);
         } else {
-          reducedOverlay.setPosition(undefined); // Hide the popup if no feature is clicked
+          reducedOverlay.setPosition(undefined);
         }
       });
     }
@@ -316,6 +326,7 @@ const OpenLayersMap = ({onPassAverages}) => {
       });
     }
   };
+
   const calculateAverage = (dataArray, property) => {
     if (dataArray.length === 0) return 0;
 
@@ -363,14 +374,8 @@ const OpenLayersMap = ({onPassAverages}) => {
 
       setFilteredFeatures(combinedData);
 
-      const averageActualPrevalence = calculateAverage(
-        combinedData,
-        "Actual prevalence"
-      );
-      const averageReducedPrevalence = calculateAverage(
-        combinedData,
-        "Reduced prevalence"
-      );
+      const averageActualPrevalence = calculateAverage(combinedData, "Actual prevalence");
+      const averageReducedPrevalence = calculateAverage(combinedData, "Reduced prevalence");
 
       const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
       const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
@@ -514,7 +519,6 @@ const OpenLayersMap = ({onPassAverages}) => {
           style={{
             height: "400px",
             width: isMap2Expanded ? "100%" : "45%",
-
             marginLeft: isMap2Expanded ? "0" : "10%",
             boxShadow: "2px 3px 8px #ccc",
             transition: "all 0.5s",
@@ -548,29 +552,19 @@ const OpenLayersMap = ({onPassAverages}) => {
             zIndex: 1000,
           }}
         />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "10px",
-            width: "30%",
-            mixBlendMode: "multiply",
-          }}
-        >
-          <LegendComponent />
-        </div>
-
+        <LegendComponent></LegendComponent>
         <div ref={popupRef} className="ol-popup" style={popupStyle}>
-          <div id="popup-content">{popupContent}</div>
+          <div id="popup-content" dangerouslySetInnerHTML={{ __html: popupContent }} />
         </div>
         <div ref={reducedPopupRef} className="ol-popup" style={popupStyle}>
-          <div id="reducedPopup-content">{reducedPopupContent}</div>
+          <div id="reducedPopup-content" dangerouslySetInnerHTML={{ __html: reducedPopupContent }} />
         </div>
       </div>
     </div>
   );
 };
 
-// Custom popup styling (you can use your own CSS)
+// Custom popup styling
 const popupStyle = {
   position: "absolute",
   background: "white",
