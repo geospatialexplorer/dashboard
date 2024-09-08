@@ -12,7 +12,7 @@ import Overlay from "ol/Overlay.js";
 import LegendComponent from "./Legend";
 import "../index.css";
 
-const OpenLayersMap = () => {
+const OpenLayersMap = ({onPassAverages}) => {
   const popupRef = useRef();
   const reducedPopupRef = useRef();
   const [popupContent, setPopupContent] = useState("");
@@ -71,7 +71,13 @@ const OpenLayersMap = () => {
   };
 
   const handleFilterClick = () => {
-    getMapData(healthData, features, selectedDisease, selectedState, selectedGender);
+    getMapData(
+      healthData,
+      features,
+      selectedDisease,
+      selectedState,
+      selectedGender
+    );
   };
 
   const handleResetClick = () => {
@@ -79,6 +85,26 @@ const OpenLayersMap = () => {
     setSelectedGender(null);
     setSelectedState(null);
     setFilteredFeatures(features);
+
+    // Hide both popups
+    mapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
+    reducedMapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
+
+    // Reset feature styles on the map
+    const vectorSource = vectorLayerRef.current.getSource();
+    // vectorSource.clear();
+    vectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(null); // Removes custom styling, reverting to default
+    });
+
+    const reducedVectorSource = reducedLayerRef.current.getSource();
+    reducedVectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(null); // Removes custom styling, reverting to default
+    });
   };
 
   useEffect(() => {
@@ -354,10 +380,17 @@ const OpenLayersMap = () => {
       const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
       const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
 
-      console.log("Average Actual Prevalence:", averageActualPrevalence);
-      console.log("Average Reduced Prevalence:", averageReducedPrevalence);
-      console.log("Average Reduced PM2.5:", averageReducedTwo);
-      console.log("Average Actual PM2.5:", averageActualTwo);
+      // console.log("Average Actual Prevalence:", averageActualPrevalence);
+      // console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+      // console.log("Average Reduced PM2.5:", averageReducedTwo);
+      // console.log("Average Actual PM2.5:", averageActualTwo);
+
+      onPassAverages(
+        averageReducedTwo,
+        averageActualTwo,
+        averageReducedPrevalence,
+        averageActualPrevalence
+      );
     }
   };
 
@@ -467,6 +500,7 @@ const OpenLayersMap = () => {
         }}
       >
         {/* Map 1 */}
+
         <div
           id="map"
           style={{
@@ -500,8 +534,8 @@ const OpenLayersMap = () => {
           icon={isMap1Expanded ? <CompressOutlined /> : <ExpandOutlined />}
           style={{
             position: "absolute",
-            bottom: "10px",
-            left: "10px",
+            top: "60px",
+            left: "1px",
             zIndex: 1000,
           }}
         />
@@ -518,7 +552,7 @@ const OpenLayersMap = () => {
             zIndex: 1000,
           }}
         />
-        <LegendComponent />
+        <LegendComponent></LegendComponent>
         <div ref={popupRef} className="ol-popup" style={popupStyle}>
           <div id="popup-content" dangerouslySetInnerHTML={{ __html: popupContent }} />
         </div>
