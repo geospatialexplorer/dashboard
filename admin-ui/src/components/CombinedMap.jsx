@@ -76,6 +76,7 @@ const OpenLayersMap = ({onPassAverages}) => {
   };
 
   const handleFilterClick = () => {
+    // setFilteredFeatures(features);
     getMapData(
       healthData,
       features,
@@ -90,6 +91,26 @@ const OpenLayersMap = ({onPassAverages}) => {
     setSelectedGender(null);
     setSelectedState(null);
     setFilteredFeatures(features);
+
+    // Hide both popups
+    mapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
+    reducedMapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
+
+    // Reset feature styles on the map
+    const vectorSource = vectorLayerRef.current.getSource();
+    // vectorSource.clear();
+    vectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(null); // Removes custom styling, reverting to default
+    });
+
+    const reducedVectorSource = reducedLayerRef.current.getSource();
+    reducedVectorSource.getFeatures().forEach((feature) => {
+      feature.setStyle(null); // Removes custom styling, reverting to default
+    });
   };
 
   useEffect(() => {
