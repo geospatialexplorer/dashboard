@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import { Card, Col, Row } from "antd";
-import {
-  ArrowRightOutlined,
-  ShoppingOutlined,
-  LineChartOutlined,
-  UserAddOutlined,
-  PieChartOutlined,
-} from "@ant-design/icons";
+import { Card } from "antd";
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import AOS from "aos";
@@ -14,6 +7,12 @@ import "aos/dist/aos.css";
 import CombinedMaps from "./CombinedMap";
 import Chart from "./Chart";
 import StateTable from "./Table";
+
+// Importing images for the cards
+import AvgActualPm from "../../public/AvgActual.webp";
+import ActualPrevalence from "../../public/ActualPrevalence.webp"; // Fixed typo
+import ReducedPm from "../../public/ReducedPM2.5.webp"; // Fixed typo
+import ReducedPrevalence from "../../public/AvgReduced.webp"; // Fixed typo
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
@@ -27,11 +26,6 @@ const AnimatedCard = styled(animated(Card))`
   }
 `;
 
-const IconContainer = styled.div`
-  font-size: 50px;
-  color: rgba(255, 255, 255, 0.3);
-`;
-
 const CardContent = styled.div`
   display: flex;
   justify-content: space-between;
@@ -42,6 +36,20 @@ const TextContent = styled.div`
   color: white;
 `;
 
+const ImageContainer = styled.div`
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    filter: invert(80%) brightness(200%);
+  }
+`;
+
 const cardStyle = {
   color: "white",
   padding: "20px",
@@ -50,17 +58,13 @@ const cardStyle = {
   flexDirection: "column",
   justifyContent: "space-between",
 };
+
 const cardContainerStyle = {
   display: "flex",
   justifyContent: "space-between",
 };
 
-
-const Dashboard = ({
-
-  healthData,
-  healthLoading,
-}) => {
+const Dashboard = ({ healthData, healthLoading }) => {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
@@ -70,33 +74,32 @@ const Dashboard = ({
       title: "Average Actual Prevalence",
       count: 150,
       color: "#00bfa5",
-      icon: <ShoppingOutlined />,
+      image: ActualPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Actual PM2.5",
       count: "53%",
       color: "#4caf50",
-      icon: <LineChartOutlined />,
+      image: AvgActualPm,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced Prevalence",
       count: 44,
       color: "#ffca28",
-      icon: <UserAddOutlined />,
+      image: ReducedPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced PM2.5",
       count: 65,
       color: "#f44336",
-      icon: <PieChartOutlined />,
+      image:ReducedPm,
       aosAnimation: "flip-left",
     },
   ];
 
-  // Keep the animation simple and trigger it on initial render
   const props = useSpring({
     opacity: 1,
     transform: "translateY(0)",
@@ -112,7 +115,12 @@ const Dashboard = ({
           <AnimatedCard
             key={index}
             data-aos={card.aosAnimation}
-            style={{ backgroundColor: card.color, ...props, flex: 1, margin: "10px" }}
+            style={{
+              backgroundColor: card.color,
+              ...props,
+              flex: 1,
+              margin: "10px",
+            }}
             hoverable
             bodyStyle={cardStyle}
           >
@@ -125,17 +133,19 @@ const Dashboard = ({
                   {card.title}
                 </div>
               </TextContent>
-              <IconContainer>{card.icon}</IconContainer>
+              {card.image && (
+                <ImageContainer>
+                  <img src={card.image} alt={card.title} />
+                </ImageContainer>
+              )}
             </CardContent>
           </AnimatedCard>
         ))}
       </div>
-      <CombinedMaps
-       
-      />
+      <CombinedMaps />
       <Chart healthData={healthData} healthLoading={healthLoading} />
-      <div style={{paddingTop:"100px"}}>
-        <StateTable healthData={healthData} healthLoading={healthLoading}/>
+      <div style={{ paddingTop: "100px" }}>
+        <StateTable healthData={healthData} healthLoading={healthLoading} />
       </div>
     </div>
   );
