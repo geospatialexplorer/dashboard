@@ -95,28 +95,28 @@ const Dashboard = ({ healthData, healthLoading }) => {
   const cardsData = [
     {
       title: "Average Actual Prevalence",
-      count: averages[0],
+      count: averages[0] ? averages[0] : 0,
       color: "#00bfa5",
       image: ActualPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Actual PM2.5",
-      count: averages[1],
+      count: averages[1] ? averages[1] : 0,
       color: "#4caf50",
       image: AvgActualPm,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced Prevalence",
-      count: averages[2],
+      count: averages[2] ? averages[2] : 0,
       color: "#ffca28",
       image: ReducedPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced PM2.5",
-      count: averages[3],
+      count: averages[3] ? averages[3] : 0,
       color: "#f44336",
       image: ReducedPm,
       aosAnimation: "flip-left",
