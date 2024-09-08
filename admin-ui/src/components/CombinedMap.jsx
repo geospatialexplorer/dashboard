@@ -15,7 +15,7 @@ import Overlay from "ol/Overlay.js";
 import LegendComponent from "./Legend";
 import "../index.css";
 
-const OpenLayersMap = () => {
+const OpenLayersMap = ({onPassAverages}) => {
   const popupRef = useRef();
   const reducedPopupRef = useRef();
   const [popupContent, setPopupContent] = useState("");
@@ -375,10 +375,17 @@ const OpenLayersMap = () => {
       const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
       const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
 
-      console.log("Average Actual Prevalence:", averageActualPrevalence);
-      console.log("Average Reduced Prevalence:", averageReducedPrevalence);
-      console.log("Average Reduced PM2.5:", averageReducedTwo);
-      console.log("Average Actual PM2.5:", averageActualTwo);
+      // console.log("Average Actual Prevalence:", averageActualPrevalence);
+      // console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+      // console.log("Average Reduced PM2.5:", averageReducedTwo);
+      // console.log("Average Actual PM2.5:", averageActualTwo);
+
+      onPassAverages(
+        averageReducedTwo,
+        averageActualTwo,
+        averageReducedPrevalence,
+        averageActualPrevalence
+      );
     }
   };
 
@@ -488,6 +495,7 @@ const OpenLayersMap = () => {
         }}
       >
         {/* Map 1 */}
+
         <div
           id="map"
           style={{
@@ -522,8 +530,8 @@ const OpenLayersMap = () => {
           icon={isMap1Expanded ? <CompressOutlined /> : <ExpandOutlined />}
           style={{
             position: "absolute",
-            bottom: "10px",
-            left: "10px",
+            top: "60px",
+            left: "1px",
             zIndex: 1000,
           }}
         />
@@ -540,7 +548,17 @@ const OpenLayersMap = () => {
             zIndex: 1000,
           }}
         />
-        <LegendComponent></LegendComponent>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            width: "30%",
+            mixBlendMode: "multiply",
+          }}
+        >
+          <LegendComponent />
+        </div>
+
         <div ref={popupRef} className="ol-popup" style={popupStyle}>
           <div id="popup-content">{popupContent}</div>
         </div>

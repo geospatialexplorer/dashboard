@@ -14,8 +14,8 @@ const LegendComponent = () => {
         background: "white",
         padding: "10px",
         borderRadius: "5px",
-        boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-        border: "1px solid black",
+        // boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+        // border: "1px solid black",
         zIndex: 1000,
         opacity: 0.8,
       }}

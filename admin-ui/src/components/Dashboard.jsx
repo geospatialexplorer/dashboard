@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { Card } from "antd";
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
@@ -65,6 +65,29 @@ const cardContainerStyle = {
 };
 
 const Dashboard = ({ healthData, healthLoading }) => {
+    const [averages, setAverages] = useState([]);
+
+    // Function to handle data from the child
+    const handleAveragesFromChild = (
+      averageReducedTwo,
+      averageActualTwo,
+      averageActualPrevalence,
+      averageReducedPrevalence
+    ) => {
+     
+      setAverages([
+        averageReducedTwo,
+        averageActualTwo,
+        averageActualPrevalence,
+        averageReducedPrevalence,
+      ]);
+
+     
+      console.log("Average Reduced PM2.5:", averageReducedTwo);
+      console.log("Average Actual PM2.5:", averageActualTwo);
+      console.log("Average Actual Prevalence:", averageActualPrevalence);
+      console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+    };
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
@@ -72,30 +95,30 @@ const Dashboard = ({ healthData, healthLoading }) => {
   const cardsData = [
     {
       title: "Average Actual Prevalence",
-      count: 150,
+      count: averages[0],
       color: "#00bfa5",
       image: ActualPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Actual PM2.5",
-      count: "53%",
+      count: averages[1],
       color: "#4caf50",
       image: AvgActualPm,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced Prevalence",
-      count: 44,
+      count: averages[2],
       color: "#ffca28",
       image: ReducedPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Average Reduced PM2.5",
-      count: 65,
+      count: averages[3],
       color: "#f44336",
-      image:ReducedPm,
+      image: ReducedPm,
       aosAnimation: "flip-left",
     },
   ];
@@ -142,7 +165,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
           </AnimatedCard>
         ))}
       </div>
-      <CombinedMaps />
+      <CombinedMaps onPassAverages={handleAveragesFromChild} />
       <Chart healthData={healthData} healthLoading={healthLoading} />
       <div style={{ paddingTop: "100px" }}>
         <StateTable healthData={healthData} healthLoading={healthLoading} />
