@@ -11,8 +11,15 @@ import {
   useGetDistrictDataQuery,
   useGetHealthDataQuery,
 } from "../services/Api";
+import Overlay from "ol/Overlay.js";
+import LegendComponent from "./Legend";
+import "../index.css";
 
 const OpenLayersMap = () => {
+  const popupRef = useRef();
+  const reducedPopupRef = useRef();
+  const [popupContent, setPopupContent] = useState("");
+  const [reducedPopupContent, setReducedPopupContent] = useState("");
   const [features, setFeatures] = useState([]);
   const [filteredFeatures, setFilteredFeatures] = useState([]);
 
@@ -20,24 +27,18 @@ const OpenLayersMap = () => {
   const [selectedState, setSelectedState] = useState(null);
   const [selectedDisease, setSelectedDisease] = useState(null);
   const [selectedGender, setSelectedGender] = useState(null);
-   const [isMap1Expanded, setIsMap1Expanded] = useState(false);
-   const [isMap2Expanded, setIsMap2Expanded] = useState(false);
-  
+  const [isMap1Expanded, setIsMap1Expanded] = useState(false);
+  const [isMap2Expanded, setIsMap2Expanded] = useState(false);
 
   const { data: districtData, isLoading: districtLoading } =
     useGetDistrictDataQuery();
   const { data: healthData, isLoading: healthLoading } =
     useGetHealthDataQuery();
-    
-
-    
 
   const mapRef = useRef(null);
   const reducedMapRef = useRef(null);
   const vectorLayerRef = useRef(null);
   const reducedLayerRef = useRef(null);
-
-     
 
   const diseases = [
     "Diabetes",
@@ -49,16 +50,15 @@ const OpenLayersMap = () => {
 
   const gender = ["Men", "Women"];
 
-   const toggleMap1Size = () => {
-     setIsMap1Expanded(!isMap1Expanded);
-     setIsMap2Expanded(false); // Collapse Map 2 when Map 1 is expanded
-   };
+  const toggleMap1Size = () => {
+    setIsMap1Expanded(!isMap1Expanded);
+    setIsMap2Expanded(false); // Collapse Map 2 when Map 1 is expanded
+  };
 
-   const toggleMap2Size = () => {
-     setIsMap2Expanded(!isMap2Expanded);
-     setIsMap1Expanded(false); // Collapse Map 1 when Map 2 is expanded
-   };
-
+  const toggleMap2Size = () => {
+    setIsMap2Expanded(!isMap2Expanded);
+    setIsMap1Expanded(false); // Collapse Map 1 when Map 2 is expanded
+  };
 
   const handleDiseaseChange = (e) => {
     const value = e.target.value;
@@ -90,8 +90,7 @@ const OpenLayersMap = () => {
     setSelectedGender(null);
     setSelectedState(null);
     setFilteredFeatures(features);
-   
-  }
+  };
 
   useEffect(() => {
     if (districtData) {
@@ -130,6 +129,24 @@ const OpenLayersMap = () => {
         }),
       });
 
+      // Create an overlay for the popup
+      const overlay = new Overlay({
+        element: popupRef.current,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250,
+        },
+      });
+
+      // Create an overlay for the popup
+      const reducedOverlay = new Overlay({
+        element: reducedPopupRef.current,
+        autoPan: true,
+        autoPanAnimation: {
+          duration: 250,
+        },
+      });
+
       reducedMapRef.current = new Map({
         target: "reducedMap",
         layers: [
@@ -144,6 +161,56 @@ const OpenLayersMap = () => {
           projection: "EPSG:4326",
         }),
       });
+
+      mapRef.current.addOverlay(overlay);
+
+      reducedMapRef.current.addOverlay(reducedOverlay);
+
+      // Handle map click events
+      mapRef.current.on("singleclick", function (event) {
+        const feature = mapRef.current.forEachFeatureAtPixel(
+          event.pixel,
+          (feat) => feat
+        );
+        if (feature) {
+          // Get feature properties and update popup content
+          const properties = feature.getProperties();
+
+          console.log(properties);
+          setPopupContent(
+            `Actual Prevalance: ${properties["Actual prevalence"]}, Reduced Prevalance: ${properties["Reduced prevalence"]}`
+          );
+
+          // Show the popup at the clicked location
+          overlay.setPosition(event.coordinate);
+        } else {
+          overlay.setPosition(undefined); // Hide the popup if no feature is clicked
+        }
+      });
+
+      //reduced map overlay
+
+      // Handle map click events on reduced map
+      reducedMapRef.current.on("singleclick", function (event) {
+        const feature = reducedMapRef.current.forEachFeatureAtPixel(
+          event.pixel,
+          (feat) => feat
+        );
+        if (feature) {
+          // Get feature properties and update popup content
+          const properties = feature.getProperties();
+
+          console.log(properties);
+          setReducedPopupContent(
+            `Actual Prevalance: ${properties["Actual prevalence"]}, Reduced Prevalance: ${properties["Reduced prevalence"]}`
+          );
+
+          // Show the popup at the clicked location
+          reducedOverlay.setPosition(event.coordinate);
+        } else {
+          reducedOverlay.setPosition(undefined); // Hide the popup if no feature is clicked
+        }
+      });
     }
 
     if (filteredFeatures.length > 0) {
@@ -156,14 +223,14 @@ const OpenLayersMap = () => {
         })
       );
 
-          const reducedVectorSource = reducedLayerRef.current.getSource();
-          reducedVectorSource.clear();
-          reducedVectorSource.addFeatures(
-            new GeoJSON().readFeatures({
-              type: "FeatureCollection",
-              features: filteredFeatures,
-            })
-          );
+      const reducedVectorSource = reducedLayerRef.current.getSource();
+      reducedVectorSource.clear();
+      reducedVectorSource.addFeatures(
+        new GeoJSON().readFeatures({
+          type: "FeatureCollection",
+          features: filteredFeatures,
+        })
+      );
 
       vectorSource.getFeatures().forEach((feature) => {
         const prevalenceValue = feature.get("Actual prevalence");
@@ -171,11 +238,11 @@ const OpenLayersMap = () => {
         feature.setStyle(style);
       });
 
-        reducedVectorSource.getFeatures().forEach((feature) => {
-          const prevalenceValue = feature.get("Reduced prevalence");
-          const style = getFeatureStyle(prevalenceValue);
-          feature.setStyle(style);
-        });
+      reducedVectorSource.getFeatures().forEach((feature) => {
+        const prevalenceValue = feature.get("Reduced prevalence");
+        const style = getFeatureStyle(prevalenceValue);
+        feature.setStyle(style);
+      });
 
       const extent = vectorSource.getExtent();
       mapRef.current.getView().fit(extent, {
@@ -263,59 +330,57 @@ const OpenLayersMap = () => {
     return Average.toFixed(2);
   };
 
- const getMapData = (healthData, features, disease, state, gender) => {
-   if (healthData.length > 0 && features.length > 0) {
-     const filterdDisease = healthData.filter((feature) => {
-       return (
-         feature.Disease === disease &&
-         feature.State.trim().toLowerCase() === state?.trim().toLowerCase()
-       );
-     });
+  const getMapData = (healthData, features, disease, state, gender) => {
+    if (healthData.length > 0 && features.length > 0) {
+      const filterdDisease = healthData.filter((feature) => {
+        return (
+          feature.Disease === disease &&
+          feature.State.trim().toLowerCase() === state?.trim().toLowerCase()
+        );
+      });
 
-     const filterByState = (data, stateName) => {
-       return data.filter((item) => item.properties.statename === stateName);
-     };
+      const filterByState = (data, stateName) => {
+        return data.filter((item) => item.properties.statename === stateName);
+      };
 
-     const geomData = filterByState(features, state);
+      const geomData = filterByState(features, state);
 
-     const combinedData = geomData.map((featureRecord) => {
-       const matchingHealth = filterdDisease.find(
-         (health) =>
-           health.District.trim().toLowerCase() ===
-           featureRecord.properties.district.trim().toLowerCase()
-       );
+      const combinedData = geomData.map((featureRecord) => {
+        const matchingHealth = filterdDisease.find(
+          (health) =>
+            health.District.trim().toLowerCase() ===
+            featureRecord.properties.district.trim().toLowerCase()
+        );
 
-       if (matchingHealth) {
-         featureRecord.properties = matchingHealth;
-       }
+        if (matchingHealth) {
+          featureRecord.properties = matchingHealth;
+        }
 
-       return featureRecord;
-     });
+        return featureRecord;
+      });
 
-     console.log(combinedData, "Combined Data");
+      console.log(combinedData, "Combined Data");
 
-     setFilteredFeatures(combinedData);
+      setFilteredFeatures(combinedData);
 
-   
+      const averageActualPrevalence = calculateAverage(
+        combinedData,
+        "Actual prevalence"
+      );
+      const averageReducedPrevalence = calculateAverage(
+        combinedData,
+        "Reduced prevalence"
+      );
 
-     
-    const averageActualPrevalence = calculateAverage(combinedData,"Actual prevalence");
-    const averageReducedPrevalence = calculateAverage(combinedData,"Reduced prevalence");
+      const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
+      const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
 
-    const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
-    const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
-
-     console.log("Average Actual Prevalence:", averageActualPrevalence);
-     console.log("Average Reduced Prevalence:", averageReducedPrevalence);
-     console.log("Average Reduced PM2.5:", averageReducedTwo);
-     console.log("Average Actual PM2.5:", averageActualTwo);
-   }
- };
-
-   
-    
-   
- 
+      console.log("Average Actual Prevalence:", averageActualPrevalence);
+      console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+      console.log("Average Reduced PM2.5:", averageReducedTwo);
+      console.log("Average Actual PM2.5:", averageActualTwo);
+    }
+  };
 
   return (
     <div>
@@ -402,7 +467,11 @@ const OpenLayersMap = () => {
                 <Button
                   type="primary"
                   onClick={handleFilterClick}
-                  style={{ position: "absolute", bottom: "10px", left:'100px' }}
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "100px",
+                  }}
                 >
                   Filter
                 </Button>
@@ -471,9 +540,27 @@ const OpenLayersMap = () => {
             zIndex: 1000,
           }}
         />
+        <LegendComponent></LegendComponent>
+        <div ref={popupRef} className="ol-popup" style={popupStyle}>
+          <div id="popup-content">{popupContent}</div>
+        </div>
+        <div ref={reducedPopupRef} className="ol-popup" style={popupStyle}>
+          <div id="reducedPopup-content">{reducedPopupContent}</div>
+        </div>
       </div>
     </div>
   );
+};
+
+// Custom popup styling (you can use your own CSS)
+const popupStyle = {
+  position: "absolute",
+  background: "white",
+  borderRadius: "5px",
+  padding: "10px",
+  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+  border: "1px solid black",
+  zIndex: 1000,
 };
 
 export default OpenLayersMap;
