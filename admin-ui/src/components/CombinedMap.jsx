@@ -35,6 +35,45 @@ const OpenLayersMap = ({onPassAverages}) => {
   const vectorLayerRef = useRef(null);
   const reducedLayerRef = useRef(null);
 
+  const statesAndUTs = [
+    "Andhra Pradesh",
+    "Uttar Pradesh",
+    "Gujarat",
+    "Maharashtra",
+    "Mizoram",
+    "Rajasthan",
+    "Kerala",
+    "Madhya Pradesh",
+    "Punjab",
+    "Uttarakhand",
+    "Haryana",
+    "Jammu & Kashmir",
+    "Arunanchal Pradesh",
+    "Odisha",
+    "Bihar",
+    "Tamil Nadu",
+    "West Bengal",
+    "Karnataka",
+    "Assam",
+    "Himachal Pradesh",
+    "Chhattisgarh",
+    "Manipur",
+    "Jharkhand",
+    "NCT of Delhi",
+    "Chandigarh",
+    "Dadara & Nagar Havelli",
+    "Daman & Diu",
+    "Tripura",
+    "Nagaland",
+    "Sikkim",
+    "Meghalaya",
+    "Puducherry",
+    "Goa",
+    "Andaman & Nicobar Island",
+    "Lakshadweep",
+  ];
+
+
   const diseases = [
     "Diabetes",
     "Hypertension",
@@ -190,7 +229,7 @@ const OpenLayersMap = ({onPassAverages}) => {
           const properties = feature.getProperties();
           setPopupContent(
             `<div>
-              <div>District: ${properties["district"]}</div>
+              <div>District: ${properties["District"]}</div>
               <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
               <div>Reduced Prevalence: ${properties["Reduced prevalence"]}</div>
             </div>`
@@ -211,7 +250,7 @@ const OpenLayersMap = ({onPassAverages}) => {
           const properties = feature.getProperties();
           setReducedPopupContent(
             `<div>
-              <div>District: ${properties["district"]}</div>
+              <div>District: ${properties["District"]}</div>
               <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
               <div>Reduced Prevalence: ${properties["Reduced prevalence"]}</div>
             </div>`
@@ -411,12 +450,12 @@ const OpenLayersMap = ({onPassAverages}) => {
               style={{ height: "100%" }}
               bodyStyle={{ maxHeight: "200px", overflowY: "auto" }}
             >
-              {uniqueStates.map((state, index) => (
+              {statesAndUTs.map((state, index) => (
                 <div key={index}>
                   <Checkbox
                     value={state}
                     onChange={handleStateChange}
-                    // disabled={selectedState && selectedState !== state}
+                    disabled={selectedState && selectedState !== state}
                     checked={selectedState === state}
                   >
                     {state}
@@ -513,7 +552,7 @@ const OpenLayersMap = ({onPassAverages}) => {
             verticalAlign: "top",
           }}
         />
-
+        {/* { Map 2} */}
         <div
           id="reducedMap"
           style={{
@@ -526,7 +565,7 @@ const OpenLayersMap = ({onPassAverages}) => {
           }}
         />
 
-        {/* Map 1 Expand/Collapse Button */}
+  
         <Button
           type="default"
           size="large"
@@ -552,12 +591,25 @@ const OpenLayersMap = ({onPassAverages}) => {
             zIndex: 1000,
           }}
         />
-        <LegendComponent></LegendComponent>
+        <div style={{position:"absolute", bottom:"10px", left:"10px"}}>
+          <LegendComponent/>
+        </div>
+     
+        <div style={{position:"absolute", bottom:"30px", right:isMap2Expanded ? "300px" : "150px"}}>
+          <LegendComponent/>
+        </div>
+
         <div ref={popupRef} className="ol-popup" style={popupStyle}>
-          <div id="popup-content" dangerouslySetInnerHTML={{ __html: popupContent }} />
+          <div
+            id="popup-content"
+            dangerouslySetInnerHTML={{ __html: popupContent }}
+          />
         </div>
         <div ref={reducedPopupRef} className="ol-popup" style={popupStyle}>
-          <div id="reducedPopup-content" dangerouslySetInnerHTML={{ __html: reducedPopupContent }} />
+          <div
+            id="reducedPopup-content"
+            dangerouslySetInnerHTML={{ __html: reducedPopupContent }}
+          />
         </div>
       </div>
     </div>

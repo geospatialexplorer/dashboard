@@ -95,20 +95,20 @@ const Dashboard = ({ healthData, healthLoading }) => {
   const cardsData = [
     {
       title: "Disease prevalence according to NFHS ",
-      count: averages[0] ? averages[2] : 0,
+      count: averages[0] ? averages[2] : 3.09,
       color: "#00bfa5",
       image: ActualPrevalence,
       aosAnimation: "flip-left",
     },
     {
       title: "Disease prevalence if NCAP targets are meet",
-      count: averages[2] ? averages[3] : 0,
+      count: averages[2] ? averages[3] : 4.87,
       color: "#ffca28",
       image: ReducedPrevalence,
       aosAnimation: "flip-left",
     },
     {
-      title: "Actual PM 2.5 concentration",
+      title: "Actual PM 2.5 concentration ",
       count: averages[1] ? averages[0] : 0,
       color: "#4caf50",
       image: AvgActualPm,
@@ -117,7 +117,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
 
     {
       title: "Targeted PM 2.5 concentration by NCAP",
-      count: averages[3] ? averages[1] : 0,
+      count: averages[3] ? averages[1] : 43.23,
       color: "#f44336",
       image: ReducedPm,
       aosAnimation: "flip-left",
