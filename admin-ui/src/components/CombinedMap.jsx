@@ -7,12 +7,15 @@ import { OSM, Vector as VectorSource } from "ol/source";
 import { Style, Fill, Stroke } from "ol/style";
 import { Row, Col, Checkbox, Card, Button } from "antd";
 import { ExpandOutlined, CompressOutlined } from "@ant-design/icons";
-import { useGetDistrictDataQuery, useGetHealthDataQuery } from "../services/Api";
+import {
+  useGetDistrictDataQuery,
+  useGetHealthDataQuery,
+} from "../services/Api";
 import Overlay from "ol/Overlay.js";
 import LegendComponent from "./Legend";
 import "../index.css";
 
-const OpenLayersMap = ({onPassAverages}) => {
+const OpenLayersMap = ({ onPassAverages }) => {
   const popupRef = useRef();
   const reducedPopupRef = useRef();
   const [popupContent, setPopupContent] = useState("");
@@ -27,8 +30,10 @@ const OpenLayersMap = ({onPassAverages}) => {
   const [isMap1Expanded, setIsMap1Expanded] = useState(false);
   const [isMap2Expanded, setIsMap2Expanded] = useState(false);
 
-  const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
-  const { data: healthData, isLoading: healthLoading } = useGetHealthDataQuery();
+  const { data: districtData, isLoading: districtLoading } =
+    useGetDistrictDataQuery();
+  const { data: healthData, isLoading: healthLoading } =
+    useGetHealthDataQuery();
 
   const mapRef = useRef(null);
   const reducedMapRef = useRef(null);
@@ -73,7 +78,6 @@ const OpenLayersMap = ({onPassAverages}) => {
     "Lakshadweep",
   ];
 
-
   const diseases = [
     "Diabetes",
     "Hypertension",
@@ -110,6 +114,7 @@ const OpenLayersMap = ({onPassAverages}) => {
   };
 
   const handleFilterClick = () => {
+    console.log(features, "features after filterd the data");
     getMapData(
       healthData,
       features,
@@ -413,8 +418,14 @@ const OpenLayersMap = ({onPassAverages}) => {
 
       setFilteredFeatures(combinedData);
 
-      const averageActualPrevalence = calculateAverage(combinedData, "Actual prevalence");
-      const averageReducedPrevalence = calculateAverage(combinedData, "Reduced prevalence");
+      const averageActualPrevalence = calculateAverage(
+        combinedData,
+        "Actual prevalence"
+      );
+      const averageReducedPrevalence = calculateAverage(
+        combinedData,
+        "Reduced prevalence"
+      );
 
       const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
       const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
@@ -539,8 +550,8 @@ const OpenLayersMap = ({onPassAverages}) => {
           justifyContent: "space-between",
         }}
       >
-        <h2 style={{width:'40%'}}>The Actual prevalence map</h2>
-        <h2 style={{width:"40%"}}>The Reduced prevalence map</h2>
+        <h2 style={{ width: "40%" }}>The Actual prevalence map</h2>
+        <h2 style={{ width: "40%" }}>The Reduced prevalence map</h2>
       </div>
       <div
         style={{
