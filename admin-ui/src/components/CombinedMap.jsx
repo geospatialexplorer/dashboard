@@ -21,6 +21,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
   const [popupContent, setPopupContent] = useState("");
   const [reducedPopupContent, setReducedPopupContent] = useState("");
   const [features, setFeatures] = useState([]);
+  const [mapGeometry, setMapGeometry] = useState([]);
   const [filteredFeatures, setFilteredFeatures] = useState([]);
 
   const [uniqueStates, setUniqueStates] = useState([]);
@@ -117,7 +118,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
     console.log(features, "features after filterd the data");
     getMapData(
       healthData,
-      features,
+      mapGeometry,
       selectedDisease,
       selectedState,
       selectedGender
@@ -125,11 +126,12 @@ const OpenLayersMap = ({ onPassAverages }) => {
   };
 
   const handleResetClick = () => {
+    window.location.reload();
     setSelectedDisease(null);
     setSelectedGender(null);
     setSelectedState(null);
     setFilteredFeatures(features);
-    window.refresh();
+    setMapGeometry(features);
 
     // Hide both popups
     mapRef.current
@@ -161,6 +163,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
       }));
       setFeatures(geoData);
       setFilteredFeatures(geoData);
+      setMapGeometry(geoData);
     }
   }, [districtData]);
 
@@ -386,8 +389,8 @@ const OpenLayersMap = ({ onPassAverages }) => {
     return Average.toFixed(2);
   };
 
-  const getMapData = (healthData, features, disease, state, gender) => {
-    if (healthData.length > 0 && features.length > 0) {
+  const getMapData = (healthData, mapfeatures, disease, state, gender) => {
+    if (healthData.length > 0 && mapfeatures.length > 0) {
       const filterdDisease = healthData.filter((feature) => {
         return (
           feature.Disease === disease &&
@@ -399,7 +402,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
         return data.filter((item) => item.properties.statename === stateName);
       };
 
-      const geomData = filterByState(features, state);
+      const geomData = filterByState(mapfeatures, state);
 
       const combinedData = geomData.map((featureRecord) => {
         const matchingHealth = filterdDisease.find(
@@ -551,8 +554,8 @@ const OpenLayersMap = ({ onPassAverages }) => {
           justifyContent: "space-between",
         }}
       >
-        <h2 style={{ width: "40%" }}>The Actual prevalence map</h2>
-        <h2 style={{ width: "40%" }}>The Reduced prevalence map</h2>
+        <h2 style={{ width: "40%" }}>District wise Actual Prevalence Map</h2>
+        <h2 style={{ width: "40%" }}>District wise Reduced Prevalence Map</h2>
       </div>
       <div
         style={{
@@ -565,8 +568,8 @@ const OpenLayersMap = ({ onPassAverages }) => {
         <div
           id="map"
           style={{
-            height: "400px",
-            width:  "50%",
+            height: "600px",
+            width: "50%",
             marginRight: "2%",
             boxShadow: "2px 3px 8px #ccc",
             transition: "all 0.5s",
@@ -578,7 +581,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
         <div
           id="reducedMap"
           style={{
-            height: "400px",
+            height: "600px",
             width: "50%",
             marginLeft: "2%",
             boxShadow: "2px 3px 8px #ccc",
@@ -587,11 +590,8 @@ const OpenLayersMap = ({ onPassAverages }) => {
           }}
         ></div>
 
-      
-
-     
         <div style={{ position: "absolute", bottom: "10px", left: "10px" }}>
-          <LegendComponent />
+          {/* <LegendComponent /> */}
         </div>
 
         <div
@@ -601,7 +601,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
             left: "53%",
           }}
         >
-          <LegendComponent />
+          {/* <LegendComponent /> */}
         </div>
 
         <div ref={popupRef} className="ol-popup" style={popupStyle}>
