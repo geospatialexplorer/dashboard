@@ -108,7 +108,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
       aosAnimation: "flip-left",
     },
     {
-      title: "Actual PM 2.5 concentration ",
+      title: "Actual PM 2.5 concentration",
       count: averages[1] ? averages[0] : 0,
       color: "#4caf50",
       image: AvgActualPm,

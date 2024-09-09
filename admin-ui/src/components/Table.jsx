@@ -78,28 +78,28 @@ const StateTable = ({ healthData, healthLoading, error }) => {
       width: 200, // Set fixed width
     },
     {
-      title: "Average Actual PM2.5",
+      title: "Disease prevalence according to NFHS",
       dataIndex: "averageActualPM2_5",
       key: "averageActualPM2_5",
       sorter: (a, b) => a.averageActualPM2_5 - b.averageActualPM2_5,
       width: 200, // Set fixed width
     },
     {
-      title: "Average Reduced PM2.5",
+      title: "Disease prevalence if NCAP targets are meet",
       dataIndex: "averageReducedPM2_5",
       key: "averageReducedPM2_5",
       sorter: (a, b) => a.averageReducedPM2_5 - b.averageReducedPM2_5,
       width: 200, // Set fixed width
     },
     {
-      title: "Average Actual Prevalence",
+      title: "Actual PM 2.5 concentration",
       dataIndex: "averageActualPrevalence",
       key: "averageActualPrevalence",
       sorter: (a, b) => a.averageActualPrevalence - b.averageActualPrevalence,
       width: 200, // Set fixed width
     },
     {
-      title: "Average Reduced Prevalence",
+      title: "Targeted PM 2.5 concentration by NCAP",
       dataIndex: "averageReducedPrevalence",
       key: "averageReducedPrevalence",
       sorter: (a, b) => a.averageReducedPrevalence - b.averageReducedPrevalence,
