@@ -13,10 +13,10 @@ const LegendComponent = () => {
     { color: "rgb(246, 227, 1)", label: "0.8 - 1" },
     { color: "rgb(243, 154, 38)", label: "1 - 2" },
     { color: "rgb(72, 98, 172)", label: "2 - 4" },
-    { color: "#a1d99b", label: "4 - 6" },
-    { color: "#31a354", label: "6 - 8" },
-    { color: "#006d2c", label: "8 - 10" },
-    { color: "#d73027", label: "> 10" },
+    // { color: "#a1d99b", label: "4 - 6" },
+    // { color: "#31a354", label: "6 - 8" },
+    // { color: "#006d2c", label: "8 - 10" },
+    { color: "#d73027", label: "> 4" },
   ];
 
   return (

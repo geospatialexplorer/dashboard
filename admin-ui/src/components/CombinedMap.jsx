@@ -30,8 +30,10 @@ const OpenLayersMap = ({ onPassAverages }) => {
   const [isMap1Expanded, setIsMap1Expanded] = useState(false);
   const [isMap2Expanded, setIsMap2Expanded] = useState(false);
 
-  const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
-  const { data: healthData, isLoading: healthLoading } = useGetHealthDataQuery();
+  const { data: districtData, isLoading: districtLoading } =
+    useGetDistrictDataQuery();
+  const { data: healthData, isLoading: healthLoading } =
+    useGetHealthDataQuery();
 
   const mapRef = useRef(null);
   const reducedMapRef = useRef(null);
@@ -127,6 +129,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
     setSelectedGender(null);
     setSelectedState(null);
     setFilteredFeatures(features);
+    window.refresh();
 
     // Hide both popups
     mapRef.current
@@ -254,7 +257,7 @@ const OpenLayersMap = ({ onPassAverages }) => {
           setReducedPopupContent(
             `<div>
               <div>District: ${properties["District"]}</div>
-              <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
+              <div>Actual Prevalence: ${properties["Actual_prevalence"]}</div>
               <div>Reduced Prevalence: ${properties["Reduced_prevalence"]}</div>
             </div>`
           );
@@ -285,13 +288,13 @@ const OpenLayersMap = ({ onPassAverages }) => {
       );
 
       vectorSource.getFeatures().forEach((feature) => {
-        const prevalenceValue = feature.get("Actual prevalence");
+        const prevalenceValue = feature.get("Actual_prevalence");
         const style = getFeatureStyle(prevalenceValue);
         feature.setStyle(style);
       });
 
       reducedVectorSource.getFeatures().forEach((feature) => {
-        const prevalenceValue = feature.get("Reduced prevalence");
+        const prevalenceValue = feature.get("Reduced_prevalence");
         const style = getFeatureStyle(prevalenceValue);
         feature.setStyle(style);
       });
