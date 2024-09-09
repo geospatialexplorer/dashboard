@@ -58,7 +58,7 @@ const Chart = ({ healthData, healthLoading }) => {
       {
         label: "Reduced Prevalence",
         data: dataset2,
-        backgroundColor: "#F39A26",
+        backgroundColor: "#4963AB",
         //borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 1,
       },

@@ -12,7 +12,7 @@ const themes = {
     menuBackground: "#ffffff",
     menuHoverBackground: "#92B5FF",
     menuHoverColor: "#ffffff",
-    menuSelectedBackground: "#92B5FF",
+    menuSelectedBackground: "#2F6EBA",
     menuSelectedColor: "#ffffff",
   },
   dark: {
