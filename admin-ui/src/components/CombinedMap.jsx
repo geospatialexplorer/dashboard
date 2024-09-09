@@ -531,6 +531,17 @@ const OpenLayersMap = ({onPassAverages}) => {
           </Col>
         </Row>
       </div>
+
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <h2 style={{width:'40%'}}>The Actual prevalence map</h2>
+        <h2 style={{width:"40%"}}>The Reduced prevalence map</h2>
+      </div>
       <div
         style={{
           position: "relative",
@@ -539,7 +550,6 @@ const OpenLayersMap = ({onPassAverages}) => {
         }}
       >
         {/* Map 1 */}
-
         <div
           id="map"
           style={{
@@ -551,7 +561,7 @@ const OpenLayersMap = ({onPassAverages}) => {
             display: "inline-block",
             verticalAlign: "top",
           }}
-        />
+        ></div>
         {/* { Map 2} */}
         <div
           id="reducedMap"
@@ -563,9 +573,8 @@ const OpenLayersMap = ({onPassAverages}) => {
             transition: "all 0.5s",
             display: "inline-block",
           }}
-        />
+        ></div>
 
-  
         <Button
           type="default"
           size="large"
@@ -591,12 +600,18 @@ const OpenLayersMap = ({onPassAverages}) => {
             zIndex: 1000,
           }}
         />
-        <div style={{position:"absolute", bottom:"10px", left:"10px"}}>
-          <LegendComponent/>
+        <div style={{ position: "absolute", bottom: "10px", left: "10px" }}>
+          <LegendComponent />
         </div>
-     
-        <div style={{position:"absolute", bottom:"30px", right:isMap2Expanded ? "300px" : "150px"}}>
-          <LegendComponent/>
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: "30px",
+            right: isMap2Expanded ? "300px" : "150px",
+          }}
+        >
+          <LegendComponent />
         </div>
 
         <div ref={popupRef} className="ol-popup" style={popupStyle}>
