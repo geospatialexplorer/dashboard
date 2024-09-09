@@ -69,19 +69,27 @@ const Chart = ({ healthData, healthLoading }) => {
     ],
   };
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      y: {
-        beginAtZero: true,
+const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        // Customize the step size between ticks
+        stepSize: 1,
+        // Optionally, you can use a callback to format tick labels
+        callback: function (value, index, values) {
+          return value; // Customize this function if you need to format the labels
+        },
       },
     },
-  };
+  },
+};
 
   // Calculate chart width based on number of data points
   const visibleDataCount = combinedData.length;
-  const chartWidth = visibleDataCount * 50; // Adjust multiplier as needed
+  const chartWidth = visibleDataCount * 70;
 
   return (
     <div style={{ paddingTop: "60px" }}>
@@ -141,7 +149,7 @@ const Chart = ({ healthData, healthLoading }) => {
           height: "calc(70vh - 60px)",
         }}
       >
-        <div style={{ width: `${chartWidth}px`, height: "100%" }}>
+        <div style={{ width:"1500%", height: "100%" }}>
           <Bar data={chartData} options={options} />
         </div>
       </div>

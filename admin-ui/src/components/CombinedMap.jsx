@@ -28,7 +28,7 @@ const OpenLayersMap = ({onPassAverages}) => {
   const [isMap2Expanded, setIsMap2Expanded] = useState(false);
 
   const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
-  const { data: healthData, isLoading: healthLoading } = useGetHealthDataQuery();
+  const { data: healthData, isLoading: healthLoading } =useGetHealthDataQuery();
 
   const mapRef = useRef(null);
   const reducedMapRef = useRef(null);
@@ -230,8 +230,8 @@ const OpenLayersMap = ({onPassAverages}) => {
           setPopupContent(
             `<div>
               <div>District: ${properties["District"]}</div>
-              <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
-              <div>Reduced Prevalence: ${properties["Reduced prevalence"]}</div>
+              <div>Actual Prevalence: ${properties["Actual_prevalence"]}</div>
+              <div>Reduced Prevalence: ${properties["Reduced_prevalence"]}</div>
             </div>`
           );
           overlay.setPosition(event.coordinate);
@@ -252,7 +252,7 @@ const OpenLayersMap = ({onPassAverages}) => {
             `<div>
               <div>District: ${properties["District"]}</div>
               <div>Actual Prevalence: ${properties["Actual prevalence"]}</div>
-              <div>Reduced Prevalence: ${properties["Reduced prevalence"]}</div>
+              <div>Reduced Prevalence: ${properties["Reduced_prevalence"]}</div>
             </div>`
           );
           reducedOverlay.setPosition(event.coordinate);
