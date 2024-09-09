@@ -51,15 +51,15 @@ const Chart = ({ healthData, healthLoading }) => {
       {
         label: "Actual Prevalence",
         data: dataset1,
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "#F7E303",
+        // borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
       },
       {
         label: "Reduced Prevalence",
         data: dataset2,
-        backgroundColor: "rgba(153, 102, 255, 0.6)",
-        borderColor: "rgba(153, 102, 255, 1)",
+        backgroundColor: "#F39A26",
+        //borderColor: "rgba(153, 102, 255, 1)",
         borderWidth: 1,
       },
     ],
@@ -68,15 +68,15 @@ const Chart = ({ healthData, healthLoading }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-      title: {
-        display: true,
-        text: "Dummy Data Bar Chart",
-      },
-    },
+    // plugins: {
+    //   legend: {
+    //     position: "top",
+    //   },
+      // title: {
+      //   display: true,
+      //   text: "Dummy Data Bar Chart",
+      // },
+    // },
     scales: {
       y: {
         beginAtZero: true,

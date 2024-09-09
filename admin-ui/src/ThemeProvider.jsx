@@ -6,13 +6,13 @@ import { ThemeProvider as StyledThemeProvider } from "styled-components";
 // Define the light and dark themes
 const themes = {
   light: {
-    primaryColor: "#ff8c00", // Orange
+    primaryColor: "#92B5FF", // Orange
     backgroundColor: "#ffffff", // White
     textColor: "#000000", // Black
     menuBackground: "#ffffff",
-    menuHoverBackground: "orange",
+    menuHoverBackground: "#92B5FF",
     menuHoverColor: "#ffffff",
-    menuSelectedBackground: "#ff4500",
+    menuSelectedBackground: "#92B5FF",
     menuSelectedColor: "#ffffff",
   },
   dark: {
