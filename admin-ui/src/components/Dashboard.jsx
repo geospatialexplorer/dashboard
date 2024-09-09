@@ -67,6 +67,8 @@ const cardContainerStyle = {
 const Dashboard = ({ healthData, healthLoading }) => {
     const [averages, setAverages] = useState([]);
 
+    console.log(healthData,'vsvs')
+
     // Function to handle data from the child
     const handleAveragesFromChild = (
       averageReducedTwo,

@@ -88,7 +88,13 @@ const AppContent = () => {
   const [selectedMenu, setSelectedMenu] = useState("1");
 
   const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
-  const { data: healthData, isLoading: healthLoading } = useGetHealthDataQuery();
+  const {
+    data: healthData,
+    error: healthError,
+    isLoading: healthLoading,
+  } = useGetHealthDataQuery();
+
+  console.log(healthData,'....ddd......');
 
   const screens = useBreakpoint();
 

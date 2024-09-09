@@ -1,9 +1,14 @@
 // src/services/apiSlice.js
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
- 
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+// Supabase URL and Key
 const supabaseUrl = "https://pdtmpyckpklkfikjvpnd.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkdG1weWNrcGtsa2Zpa2p2cG5kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNDUwNDQyMywiZXhwIjoyMDQwMDgwNDIzfQ.FZxR7cZefz012P2knSzTaBHHrcSXFhrEcSsZOMxhPGk"; // Replace with your Supabase Key
- 
+const supabaseKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkdG1weWNrcGtsa2Zpa2p2cG5kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNDUwNDQyMywiZXhwIjoyMDQwMDgwNDIzfQ.FZxR7cZefz012P2knSzTaBHHrcSXFhrEcSsZOMxhPGk"; // Replace with your Supabase Key
+
+// Health Data URL
+const healthDataURL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
+
 const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -20,10 +25,13 @@ const apiSlice = createApi({
       query: () => "district?select=*",
     }),
     getHealthData: builder.query({
-      query: () => "health?select=*",
+      query: () => ({
+        url: `${healthDataURL}`,
+        method: "GET",
+      }),
     }),
   }),
 });
- 
+
 export default apiSlice;
 export const { useGetDistrictDataQuery, useGetHealthDataQuery } = apiSlice;
