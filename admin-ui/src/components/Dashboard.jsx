@@ -10,9 +10,9 @@ import StateTable from "./Table";
 
 // Importing images for the cards
 import AvgActualPm from "../../public/AvgActual.webp";
-import ActualPrevalence from "../../public/ActualPrevalence.webp"; // Fixed typo
-import ReducedPm from "../../public/ReducedPM2.5.webp"; // Fixed typo
-import ReducedPrevalence from "../../public/AvgReduced.webp"; // Fixed typo
+import ActualPrevalence from "../../public/ActualPrevalence.webp"; 
+import ReducedPm from "../../public/ReducedPM2.5.webp"; 
+import ReducedPrevalence from "../../public/AvgReduced.webp"; 
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
