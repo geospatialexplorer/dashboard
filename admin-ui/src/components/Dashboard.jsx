@@ -109,7 +109,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
     },
     {
       title: "Actual PM 2.5 concentration ",
-      count: averages[1] ? averages[0] : 0,
+      count: averages[1] ? averages[0] : 32.98,
       color: "#4caf50",
       image: AvgActualPm,
       aosAnimation: "flip-left",
