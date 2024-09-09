@@ -566,8 +566,8 @@ const OpenLayersMap = ({ onPassAverages }) => {
           id="map"
           style={{
             height: "400px",
-            width: isMap1Expanded ? "100%" : "45%",
-            marginRight: isMap1Expanded ? "0" : "10%",
+            width:  "50%",
+            marginRight: "2%",
             boxShadow: "2px 3px 8px #ccc",
             transition: "all 0.5s",
             display: "inline-block",
@@ -579,39 +579,17 @@ const OpenLayersMap = ({ onPassAverages }) => {
           id="reducedMap"
           style={{
             height: "400px",
-            width: isMap2Expanded ? "100%" : "45%",
-            marginLeft: isMap2Expanded ? "0" : "10%",
+            width: "50%",
+            marginLeft: "2%",
             boxShadow: "2px 3px 8px #ccc",
             transition: "all 0.5s",
             display: "inline-block",
           }}
         ></div>
 
-        <Button
-          type="default"
-          size="large"
-          onClick={toggleMap1Size}
-          icon={isMap1Expanded ? <CompressOutlined /> : <ExpandOutlined />}
-          style={{
-            position: "absolute",
-            top: "60px",
-            left: "1px",
-            zIndex: 1000,
-          }}
-        />
+      
 
-        <Button
-          type="default"
-          size="large"
-          onClick={toggleMap2Size}
-          icon={isMap2Expanded ? <CompressOutlined /> : <ExpandOutlined />}
-          style={{
-            position: "absolute",
-            bottom: "10px",
-            right: "10px",
-            zIndex: 1000,
-          }}
-        />
+     
         <div style={{ position: "absolute", bottom: "10px", left: "10px" }}>
           <LegendComponent />
         </div>
@@ -619,8 +597,8 @@ const OpenLayersMap = ({ onPassAverages }) => {
         <div
           style={{
             position: "absolute",
-            bottom: "30px",
-            right: isMap2Expanded ? "300px" : "150px",
+            bottom: "10px",
+            left: "53%",
           }}
         >
           <LegendComponent />
