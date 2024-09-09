@@ -421,15 +421,15 @@ const OpenLayersMap = ({ onPassAverages }) => {
 
       const averageActualPrevalence = calculateAverage(
         combinedData,
-        "Actual prevalence"
+        "Actual_prevalence"
       );
       const averageReducedPrevalence = calculateAverage(
         combinedData,
-        "Reduced prevalence"
+        "Actual_prevalence"
       );
 
-      const averageReducedTwo = calculateAverage(combinedData, "Actual PM2.5");
-      const averageActualTwo = calculateAverage(combinedData, "Reduced PM2.5");
+      const averageReducedTwo = calculateAverage(combinedData, "ActualPM");
+      const averageActualTwo = calculateAverage(combinedData, "ReducedPM");
 
       // console.log("Average Actual Prevalence:", averageActualPrevalence);
       // console.log("Average Reduced Prevalence:", averageReducedPrevalence);
