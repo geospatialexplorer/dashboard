@@ -8,7 +8,7 @@ import { Style, Fill, Stroke } from "ol/style";
 // import "./HealthMap.css";
 
 // const DISTRICT_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
-const HEALTH_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
+const HEALTH_API_URL = "https://sheetdb.io/api/v1/gwojvaves7wuk";
 
 const HealthMap = () => {
   const [map, setMap] = useState(null);

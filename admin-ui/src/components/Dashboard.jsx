@@ -13,6 +13,7 @@ import AvgActualPm from "../../public/AvgActual.webp";
 import ActualPrevalence from "../../public/ActualPrevalence.webp"; 
 import ReducedPm from "../../public/ReducedPM2.5.webp"; 
 import ReducedPrevalence from "../../public/AvgReduced.webp"; 
+import HealthMap from "./HealthMap";
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
@@ -168,7 +169,8 @@ const Dashboard = ({ healthData, healthLoading }) => {
           </AnimatedCard>
         ))}
       </div>
-      <CombinedMaps onPassAverages={handleAveragesFromChild} />
+      {/* <CombinedMaps onPassAverages={handleAveragesFromChild} /> */}
+      <HealthMap/>
       <Chart healthData={healthData} healthLoading={healthLoading} />
       <div style={{ paddingTop: "100px" }}>
         <StateTable healthData={healthData} healthLoading={healthLoading} />

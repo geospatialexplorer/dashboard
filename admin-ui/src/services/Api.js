@@ -7,7 +7,7 @@ const supabaseKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBkdG1weWNrcGtsa2Zpa2p2cG5kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcyNDUwNDQyMywiZXhwIjoyMDQwMDgwNDIzfQ.FZxR7cZefz012P2knSzTaBHHrcSXFhrEcSsZOMxhPGk"; // Replace with your Supabase Key
 
 // Health Data URL
-const healthDataURL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
+const healthDataURL = "https://sheetdb.io/api/v1/gwojvaves7wuk";
 
 const apiSlice = createApi({
   reducerPath: "api",
