@@ -5,12 +5,20 @@ import { Tile as TileLayer, Vector as VectorLayer } from "ol/layer";
 import { OSM, Vector as VectorSource } from "ol/source";
 import GeoJSON from "ol/format/GeoJSON";
 import { Style, Fill, Stroke } from "ol/style";
+import Overlay from "ol/Overlay.js";
+import FilterComponent from "./FilterComponent";
+// import { Chart } from "chart.js";
+import Chart from "../components/Chart";
+import StateTable from "./Table";
 // import "./HealthMap.css";
 
 // const DISTRICT_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
 const HEALTH_API_URL = "https://sheetdb.io/api/v1/gwojvaves7wuk";
 
 const HealthMap = () => {
+  const popupRef = useRef();
+
+  const [popupContent, setPopupContent] = useState("");
   const [map, setMap] = useState(null);
   const [districtData, setDistrictData] = useState([]);
   const [healthData, setHealthData] = useState([]);
@@ -107,6 +115,41 @@ const HealthMap = () => {
         }),
       });
     }
+    // Create an overlay for the popup
+    const overlay = new Overlay({
+      element: popupRef.current,
+      // autoPan: true,
+      // autoPanAnimation: {
+      //   duration: 250,
+      // },
+    });
+
+    mapRef.current.addOverlay(overlay);
+    let lastFeature = null; // Track the last hovered feature
+    // Handle map click events
+    mapRef.current.on("singleclick", function (event) {
+      const feature = mapRef.current.forEachFeatureAtPixel(
+        event.pixel,
+        (feat) => feat
+      );
+
+      // Only update if the hovered feature has changed
+
+      if (feature) {
+        const properties = feature.getProperties();
+        console.log(properties, "==========");
+        setPopupContent(
+          `<div>
+                <div>District: ${properties["district"]}</div>
+                <div>Actual Prevalence: ${properties.properties["Actual_prevalence"]}</div>
+                <div>Reduced Prevalence: ${properties.properties["Reduced_prevalence"]}</div>
+              </div>`
+        );
+        overlay.setPosition(event.coordinate);
+      } else {
+        overlay.setPosition(undefined);
+      }
+    });
 
     if (filteredFeatures.length > 0) {
       const vectorSource = vectorLayerRef.current.getSource();
@@ -198,6 +241,8 @@ const HealthMap = () => {
         );
       });
 
+      setHealthData(filterdHealthData);
+
       const combinedData = filterdStateData.map((featureRecord) => {
         const matchingHealth = filterdHealthData.find(
           (health) =>
@@ -278,13 +323,33 @@ const HealthMap = () => {
 
   return (
     <div>
+      <FilterComponent></FilterComponent>
       <div id="map" style={{ width: "100%", height: "80vh" }}></div>;
       <div>
         <button onClick={queryLayer}>Query</button>
         <button onClick={resetLayer}>Reset</button>
       </div>
+      <div ref={popupRef} className="ol-popup" style={popupStyle}>
+        <div
+          id="popup-content"
+          dangerouslySetInnerHTML={{ __html: popupContent }}
+        />
+      </div>
+      <Chart healthData={healthData} />
+      <StateTable healthData={healthData} />
     </div>
   );
+};
+
+// Custom popup styling
+const popupStyle = {
+  position: "absolute",
+  background: "white",
+  borderRadius: "5px",
+  padding: "10px",
+  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+  border: "1px solid black",
+  zIndex: 1000,
 };
 
 export default HealthMap;

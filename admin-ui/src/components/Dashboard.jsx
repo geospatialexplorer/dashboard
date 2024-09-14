@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "antd";
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
@@ -10,10 +10,11 @@ import StateTable from "./Table";
 
 // Importing images for the cards
 import AvgActualPm from "../../public/AvgActual.webp";
-import ActualPrevalence from "../../public/ActualPrevalence.webp"; 
-import ReducedPm from "../../public/ReducedPM2.5.webp"; 
-import ReducedPrevalence from "../../public/AvgReduced.webp"; 
-import HealthMap from "./HealthMap";
+import ActualPrevalence from "../../public/ActualPrevalence.webp";
+import ReducedPm from "../../public/ReducedPM2.5.webp";
+import ReducedPrevalence from "../../public/AvgReduced.webp";
+import HealthMap from "../components/HealthMap";
+import FilterComponent from "./FilterComponent";
 
 const AnimatedCard = styled(animated(Card))`
   cursor: pointer;
@@ -66,31 +67,29 @@ const cardContainerStyle = {
 };
 
 const Dashboard = ({ healthData, healthLoading }) => {
-    const [averages, setAverages] = useState([]);
+  const [averages, setAverages] = useState([]);
 
-    console.log(healthData,'vsvs')
+  console.log(healthData, "vsvs");
 
-    // Function to handle data from the child
-    const handleAveragesFromChild = (
+  // Function to handle data from the child
+  const handleAveragesFromChild = (
+    averageReducedTwo,
+    averageActualTwo,
+    averageActualPrevalence,
+    averageReducedPrevalence
+  ) => {
+    setAverages([
       averageReducedTwo,
       averageActualTwo,
       averageActualPrevalence,
-      averageReducedPrevalence
-    ) => {
-     
-      setAverages([
-        averageReducedTwo,
-        averageActualTwo,
-        averageActualPrevalence,
-        averageReducedPrevalence,
-      ]);
+      averageReducedPrevalence,
+    ]);
 
-     
-      console.log("Average Reduced PM2.5:", averageReducedTwo);
-      console.log("Average Actual PM2.5:", averageActualTwo);
-      console.log("Average Actual Prevalence:", averageActualPrevalence);
-      console.log("Average Reduced Prevalence:", averageReducedPrevalence);
-    };
+    console.log("Average Reduced PM2.5:", averageReducedTwo);
+    console.log("Average Actual PM2.5:", averageActualTwo);
+    console.log("Average Actual Prevalence:", averageActualPrevalence);
+    console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+  };
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
@@ -170,7 +169,8 @@ const Dashboard = ({ healthData, healthLoading }) => {
         ))}
       </div>
       {/* <CombinedMaps onPassAverages={handleAveragesFromChild} /> */}
-      <HealthMap/>
+
+      <HealthMap />
       <Chart healthData={healthData} healthLoading={healthLoading} />
       <div style={{ paddingTop: "100px" }}>
         <StateTable healthData={healthData} healthLoading={healthLoading} />
