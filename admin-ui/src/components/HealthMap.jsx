@@ -10,12 +10,14 @@ import FilterComponent from "./FilterComponent";
 // import { Chart } from "chart.js";
 import Chart from "../components/Chart";
 import StateTable from "./Table";
+import { Row, Col, Card, Checkbox, Button } from "antd";
+
 // import "./HealthMap.css";
 
 // const DISTRICT_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
-const HEALTH_API_URL = "https://sheetdb.io/api/v1/gwojvaves7wuk";
+const HEALTH_API_URL = "https://sheetdb.io/api/v1/iv147xri3ae3i";
 
-const HealthMap = () => {
+const HealthMap = ({}) => {
   const popupRef = useRef();
 
   const [popupContent, setPopupContent] = useState("");
@@ -26,6 +28,144 @@ const HealthMap = () => {
   const mapRef = useRef(null);
   const vectorLayerRef = useRef(null);
   const [features, setFeatures] = useState([]);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedDisease, setSelectedDisease] = useState(null);
+  const [selectedGender, setSelectedGender] = useState(null);
+  const [resetHealthData, setResetHealthData] = useState([]);
+
+  // Mock Data
+  const statesAndUTs = [
+    "Andhra Pradesh",
+    "Uttar Pradesh",
+    "Gujarat",
+    // ...rest of the states
+  ];
+
+  const diseases = [
+    "Diabetes",
+    "Hypertension",
+    "Chronic Respiratory Disease",
+    // ...rest of the diseases
+  ];
+
+  const gender = ["Men", "Women"];
+
+  // Components
+
+  const StateFilter = ({ selectedState, handleStateChange }) => (
+    <Card
+      title="State"
+      bordered
+      style={{ height: "100%" }}
+      bodyStyle={{ maxHeight: "200px", overflowY: "auto" }}
+    >
+      {statesAndUTs.map((state, index) => (
+        <div key={index}>
+          <Checkbox
+            value={state}
+            onChange={handleStateChange}
+            disabled={selectedState && selectedState !== state}
+            checked={selectedState === state}
+          >
+            {state}
+          </Checkbox>
+          <br />
+        </div>
+      ))}
+    </Card>
+  );
+
+  const DiseaseFilter = ({ selectedDisease, handleDiseaseChange }) => (
+    <Card
+      title="Disease"
+      bordered
+      style={{ height: "100%" }}
+      bodyStyle={{ display: "flex", flexDirection: "column" }}
+    >
+      {diseases.map((disease, index) => (
+        <div key={index}>
+          <Checkbox
+            value={disease}
+            onChange={handleDiseaseChange}
+            disabled={selectedDisease && selectedDisease !== disease}
+            checked={selectedDisease === disease}
+          >
+            {disease}
+          </Checkbox>
+          <br />
+        </div>
+      ))}
+    </Card>
+  );
+
+  const GenderFilter = ({
+    selectedGender,
+    handleGenderChange,
+    handleFilterClick,
+    handleResetClick,
+  }) => (
+    <Card
+      title="Gender"
+      bordered
+      style={{ height: "100%" }}
+      bodyStyle={{ display: "flex", flexDirection: "column" }}
+    >
+      {gender.map((gen) => (
+        <div key={gen}>
+          <Checkbox
+            value={gen}
+            onChange={handleGenderChange}
+            disabled={selectedGender && selectedGender !== gen}
+            checked={selectedGender === gen}
+          >
+            {gen}
+          </Checkbox>
+          <br />
+        </div>
+      ))}
+      <div style={{ marginTop: "20px" }}>
+        <Button
+          type="primary"
+          onClick={handleFilterClick}
+          style={{ marginRight: "10px" }}
+        >
+          Filter
+        </Button>
+        <Button type="dashed" onClick={handleResetClick}>
+          Reset
+        </Button>
+      </div>
+    </Card>
+  );
+
+  const handleStateChange = (e) => {
+    const value = e.target.value;
+    setSelectedState(selectedState === value ? null : value);
+  };
+
+  const handleDiseaseChange = (e) => {
+    const value = e.target.value;
+    setSelectedDisease(selectedDisease === value ? null : value);
+  };
+
+  const handleGenderChange = (e) => {
+    const value = e.target.value;
+    setSelectedGender(selectedGender === value ? null : value);
+  };
+
+  const handleResetClick = () => {
+    setSelectedState(null);
+    setSelectedDisease(null);
+    setSelectedGender(null);
+    resetLayer();
+  };
+
+  const handleFilterClick = () => {
+    resetLayer();
+    // console.log(selectedState, selectedDisease, selectedGender);
+    // onFilter({ selectedState, selectedDisease, selectedGender });
+    queryLayer(selectedState, selectedDisease, selectedGender);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,6 +223,7 @@ const HealthMap = () => {
         const data = await response.json();
 
         setHealthData(data);
+        setResetHealthData(data);
         // return data; // Return the data for further processing
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
@@ -170,11 +311,11 @@ const HealthMap = () => {
   }, [filteredFeatures]);
 
   //main query for the map
-  const queryLayer = () => {
+  const queryLayer = (state, disease, gender) => {
     //style the element
 
     const getFeatureStyle = (prevalenceValue) => {
-      if (prevalenceValue < 1) {
+      if (prevalenceValue < 0.05) {
         return new Style({
           fill: new Fill({
             color: "rgba(0, 255, 0, 0.5)", // Green for <1
@@ -184,7 +325,7 @@ const HealthMap = () => {
             width: 1,
           }),
         });
-      } else if (prevalenceValue >= 1 && prevalenceValue <= 2) {
+      } else if (prevalenceValue >= 0.05 && prevalenceValue <= 1) {
         return new Style({
           fill: new Fill({
             color: "rgba(255, 255, 0, 0.5)", // Yellow for 1-2
@@ -194,7 +335,7 @@ const HealthMap = () => {
             width: 1,
           }),
         });
-      } else if (prevalenceValue > 2 && prevalenceValue <= 4) {
+      } else if (prevalenceValue > 1 && prevalenceValue <= 4) {
         return new Style({
           fill: new Fill({
             color: "rgba(255, 165, 0, 0.5)", // Orange for 3-4
@@ -230,14 +371,14 @@ const HealthMap = () => {
     vectorSource.clear();
     if (districtData.length > 0 && healthData.length > 0 && !map) {
       const filterdStateData = districtData.filter((feature) => {
-        return feature.statename === "Punjab";
+        return feature.statename === state;
       });
 
       const filterdHealthData = healthData.filter((feature) => {
         return (
-          feature.Disease === "Diabetes" &&
-          feature.State === "Punjab" &&
-          feature.Gender === "Men"
+          feature.State === state &&
+          feature.Disease === disease &&
+          feature.Gender === gender
         );
       });
 
@@ -251,13 +392,11 @@ const HealthMap = () => {
         );
 
         if (matchingHealth) {
-          //   console.log(featureRecord, "--------feature--------");
-          //   console.log(matchingHealth, "------------health-------");
           featureRecord.properties = matchingHealth;
-          //   return {
-          //     ...featureRecord,
-          //     ...matchingHealth,
-          //   };
+          return {
+            ...featureRecord,
+            ...matchingHealth,
+          };
         }
 
         return featureRecord;
@@ -270,11 +409,7 @@ const HealthMap = () => {
         geometry: row.geom,
         properties: row,
       }));
-      //   console.log(combinedFeature, "Combined data----------");
 
-      //   setFilteredFeatures(combinedData);
-      //   const vectorSource = vectorLayerRef.current.getSource();
-      //   vectorSource.clear();
       vectorSource.addFeatures(
         new GeoJSON().readFeatures({
           type: "FeatureCollection",
@@ -283,9 +418,10 @@ const HealthMap = () => {
       );
 
       vectorSource.getFeatures().forEach((feature) => {
-        // console.log(feature, "ffffffffffffffffffff");
+        console.log(feature, "ffffffffffffffffffff");
         //   const prevalenceValue = feature.get("prevalance"); // Ensure this is a number
-        const prevalenceValue = feature.values_.properties.Actual_prevalence; // Ensure this is a number
+        const prevalenceValue = feature.values_.Actual_prevalence;
+        // Ensure this is a number
 
         // console.log(prevalenceValue, "------------Prevalance-------");
         const style = getFeatureStyle(prevalenceValue);
@@ -304,6 +440,7 @@ const HealthMap = () => {
   };
 
   const resetLayer = () => {
+    setHealthData(resetHealthData);
     const vectorSource = vectorLayerRef.current.getSource();
     vectorSource.clear();
     console.log(features, "featuresssssssssss");
@@ -323,12 +460,45 @@ const HealthMap = () => {
 
   return (
     <div>
-      <FilterComponent></FilterComponent>
-      <div id="map" style={{ width: "100%", height: "80vh" }}></div>;
       <div>
+        <div
+          style={{
+            marginBottom: "20px",
+            marginTop: "50px",
+            boxShadow: "2px 3px 8px #ccc",
+            padding: "20px",
+          }}
+        >
+          <Row gutter={16}>
+            <Col xs={24} sm={24} md={8}>
+              <StateFilter
+                selectedState={selectedState}
+                handleStateChange={handleStateChange}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={8}>
+              <DiseaseFilter
+                selectedDisease={selectedDisease}
+                handleDiseaseChange={handleDiseaseChange}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={8}>
+              <GenderFilter
+                selectedGender={selectedGender}
+                handleGenderChange={handleGenderChange}
+                handleFilterClick={handleFilterClick}
+                handleResetClick={handleResetClick}
+              />
+            </Col>
+          </Row>
+        </div>
+        {/* <HealthMap></HealthMap> */}
+      </div>
+      <div id="map" style={{ width: "100%", height: "80vh" }}></div>;
+      {/* <div>
         <button onClick={queryLayer}>Query</button>
         <button onClick={resetLayer}>Reset</button>
-      </div>
+      </div> */}
       <div ref={popupRef} className="ol-popup" style={popupStyle}>
         <div
           id="popup-content"

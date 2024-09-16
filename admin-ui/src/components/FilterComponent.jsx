@@ -172,7 +172,7 @@ const FilterComponent = ({ onFilter }) => {
           </Col>
         </Row>
       </div>
-      <HealthMap></HealthMap>
+      {/* <HealthMap></HealthMap> */}
     </div>
   );
 };
