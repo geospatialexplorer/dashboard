@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Row, Col, Card, Checkbox, Button } from "antd";
-import HealthMap from "./Healthmap";
 
 // Mock Data
 const statesAndUTs = [

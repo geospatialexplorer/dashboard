@@ -15,7 +15,7 @@ import { Row, Col, Card, Checkbox, Button } from "antd";
 // import "./HealthMap.css";
 
 // const DISTRICT_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
-const HEALTH_API_URL = "https://sheetdb.io/api/v1/iv147xri3ae3i";
+const HEALTH_API_URL = "https://sheetdb.io/api/v1/vz5qlws6pgzqj";
 
 const HealthMap = ({}) => {
   const popupRef = useRef();
@@ -27,11 +27,13 @@ const HealthMap = ({}) => {
   const [filteredFeatures, setFilteredFeatures] = useState([]);
   const mapRef = useRef(null);
   const vectorLayerRef = useRef(null);
+  const filteredVectorLayerRef = useRef(null);
   const [features, setFeatures] = useState([]);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedDisease, setSelectedDisease] = useState(null);
   const [selectedGender, setSelectedGender] = useState(null);
   const [resetHealthData, setResetHealthData] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
   // Mock Data
   const statesAndUTs = [
@@ -161,7 +163,7 @@ const HealthMap = ({}) => {
   };
 
   const handleFilterClick = () => {
-    resetLayer();
+    // resetLayer();
     // console.log(selectedState, selectedDisease, selectedGender);
     // onFilter({ selectedState, selectedDisease, selectedGender });
     queryLayer(selectedState, selectedDisease, selectedGender);
@@ -222,6 +224,9 @@ const HealthMap = ({}) => {
 
         const data = await response.json();
 
+        console.log(data, "healthData");
+        setChartData(data);
+
         setHealthData(data);
         setResetHealthData(data);
         // return data; // Return the data for further processing
@@ -241,6 +246,11 @@ const HealthMap = ({}) => {
         source: new VectorSource(),
       });
 
+      // New vector layer for filtered features
+      filteredVectorLayerRef.current = new VectorLayer({
+        source: new VectorSource(),
+      });
+
       mapRef.current = new Map({
         target: "map",
         layers: [
@@ -248,6 +258,7 @@ const HealthMap = ({}) => {
             source: new OSM(),
           }),
           vectorLayerRef.current,
+          filteredVectorLayerRef.current, // Layer for filtered features
         ],
         view: new View({
           center: [0, 0],
@@ -310,66 +321,71 @@ const HealthMap = ({}) => {
     }
   }, [filteredFeatures]);
 
+  //style the element
+
+  const getFeatureStyle = (prevalenceValue) => {
+    if (prevalenceValue < 0.05) {
+      return new Style({
+        fill: new Fill({
+          color: "rgba(0, 255, 0, 0.5)", // Green for <1
+        }),
+        stroke: new Stroke({
+          color: "#00FF00",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue >= 0.05 && prevalenceValue <= 1) {
+      return new Style({
+        fill: new Fill({
+          color: "rgba(255, 255, 0, 0.5)", // Yellow for 1-2
+        }),
+        stroke: new Stroke({
+          color: "#FFFF00",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue > 1 && prevalenceValue <= 4) {
+      return new Style({
+        fill: new Fill({
+          color: "rgba(255, 165, 0, 0.5)", // Orange for 3-4
+        }),
+        stroke: new Stroke({
+          color: "#FFA500",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue > 4) {
+      return new Style({
+        fill: new Fill({
+          color: "rgba(255, 0, 0, 0.5)", // Red for >4
+        }),
+        stroke: new Stroke({
+          color: "#FF0000",
+          width: 1,
+        }),
+      });
+    } else {
+      return new Style({
+        fill: new Fill({
+          color: "rgba(0, 0, 255, 0.5)", // Blue for undefined or out of range values
+        }),
+        stroke: new Stroke({
+          color: "#0000FF",
+          width: 1,
+        }),
+      });
+    }
+  };
+
   //main query for the map
   const queryLayer = (state, disease, gender) => {
-    //style the element
-
-    const getFeatureStyle = (prevalenceValue) => {
-      if (prevalenceValue < 0.05) {
-        return new Style({
-          fill: new Fill({
-            color: "rgba(0, 255, 0, 0.5)", // Green for <1
-          }),
-          stroke: new Stroke({
-            color: "#00FF00",
-            width: 1,
-          }),
-        });
-      } else if (prevalenceValue >= 0.05 && prevalenceValue <= 1) {
-        return new Style({
-          fill: new Fill({
-            color: "rgba(255, 255, 0, 0.5)", // Yellow for 1-2
-          }),
-          stroke: new Stroke({
-            color: "#FFFF00",
-            width: 1,
-          }),
-        });
-      } else if (prevalenceValue > 1 && prevalenceValue <= 4) {
-        return new Style({
-          fill: new Fill({
-            color: "rgba(255, 165, 0, 0.5)", // Orange for 3-4
-          }),
-          stroke: new Stroke({
-            color: "#FFA500",
-            width: 1,
-          }),
-        });
-      } else if (prevalenceValue > 4) {
-        return new Style({
-          fill: new Fill({
-            color: "rgba(255, 0, 0, 0.5)", // Red for >4
-          }),
-          stroke: new Stroke({
-            color: "#FF0000",
-            width: 1,
-          }),
-        });
-      } else {
-        return new Style({
-          fill: new Fill({
-            color: "rgba(0, 0, 255, 0.5)", // Blue for undefined or out of range values
-          }),
-          stroke: new Stroke({
-            color: "#0000FF",
-            width: 1,
-          }),
-        });
-      }
-    };
-    const vectorSource = vectorLayerRef.current.getSource();
+    // setHealthData(healthData);
+    // console.log(healthData, "sdffffffffsfasd");
+    // setDistrictData(features);
+    // console.log(healthData, "sdffffffffsfasd");
+    const vectorSource = filteredVectorLayerRef.current.getSource();
     vectorSource.clear();
-    if (districtData.length > 0 && healthData.length > 0 && !map) {
+    if (districtData.length > 0 && healthData.length > 0) {
       const filterdStateData = districtData.filter((feature) => {
         return feature.statename === state;
       });
@@ -382,7 +398,8 @@ const HealthMap = ({}) => {
         );
       });
 
-      setHealthData(filterdHealthData);
+      // setHealthData(filterdHealthData);
+      setChartData(filterdHealthData);
 
       const combinedData = filterdStateData.map((featureRecord) => {
         const matchingHealth = filterdHealthData.find(
@@ -418,7 +435,7 @@ const HealthMap = ({}) => {
       );
 
       vectorSource.getFeatures().forEach((feature) => {
-        console.log(feature, "ffffffffffffffffffff");
+        // console.log(feature, "ffffffffffffffffffff");
         //   const prevalenceValue = feature.get("prevalance"); // Ensure this is a number
         const prevalenceValue = feature.values_.Actual_prevalence;
         // Ensure this is a number
@@ -435,16 +452,21 @@ const HealthMap = ({}) => {
       });
     }
 
+    // setHealthData(resetHealthData);
+
+    console.log(chartData);
+
     // if (filteredFeatures.length > 0) {
     // }
   };
 
   const resetLayer = () => {
     setHealthData(resetHealthData);
-    const vectorSource = vectorLayerRef.current.getSource();
+
+    const vectorSource = filteredVectorLayerRef.current.getSource();
     vectorSource.clear();
-    console.log(features, "featuresssssssssss");
-    // setFilteredFeatures(features);
+    // console.log(features, "featuresssssssssss");
+    // // setFilteredFeatures(features);
     vectorSource.addFeatures(
       new GeoJSON().readFeatures({
         type: "FeatureCollection",
@@ -505,8 +527,8 @@ const HealthMap = ({}) => {
           dangerouslySetInnerHTML={{ __html: popupContent }}
         />
       </div>
-      <Chart healthData={healthData} />
-      <StateTable healthData={healthData} />
+      <Chart healthData={chartData} />
+      <StateTable healthData={chartData} />
     </div>
   );
 };

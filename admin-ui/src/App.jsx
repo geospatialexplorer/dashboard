@@ -16,7 +16,7 @@ import Tabledata from "./components/Table";
 import CheckboxComponent from "./components/button";
 import { useGetDistrictDataQuery, useGetHealthDataQuery } from "./services/Api";
 import OpenLayersMap from "./components/CombinedMap.jsx";
-import logo from '/logo.png';
+import logo from "/logo.png";
 
 const { Header, Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -25,7 +25,7 @@ const StyledLayout = styled(Layout)`
   height: 100vh;
   overflow: hidden;
   background-color: ${({ theme }) => theme.backgroundColor};
-  margin:0;
+  margin: 0;
 `;
 
 const StyledHeader = styled(Header)`
@@ -39,7 +39,7 @@ const StyledHeader = styled(Header)`
 `;
 
 const StyledContent = styled(Content)`
-  margin: 24px 16px; 
+  margin: 24px 16px;
   padding: 24px;
   min-height: 400px;
   background: ${({ theme }) => theme.backgroundColor};
@@ -78,7 +78,7 @@ const StyledSider = styled(Sider)`
 const LogoContainer = styled.div`
   padding: 16px;
   text-align: center;
-  background-color: ${({ theme }) => theme === "dark" ? "#111d2c" : "white"}; 
+  background-color: ${({ theme }) => (theme === "dark" ? "#111d2c" : "white")};
 `;
 
 const AppContent = () => {
@@ -87,14 +87,14 @@ const AppContent = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
 
-  const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
-  const {
-    data: healthData,
-    error: healthError,
-    isLoading: healthLoading,
-  } = useGetHealthDataQuery();
+  // const { data: districtData, isLoading: districtLoading } = useGetDistrictDataQuery();
+  // const {
+  //   data: healthData,
+  //   error: healthError,
+  //   isLoading: healthLoading,
+  // } = useGetHealthDataQuery();
 
-  console.log(healthData,'....ddd......');
+  // console.log(healthData,'....ddd......');
 
   const screens = useBreakpoint();
 
@@ -116,84 +116,62 @@ const AppContent = () => {
   const renderContent = () => {
     switch (selectedMenu) {
       case "1":
-        return (
-          <Dashboard
-            districtData={districtData}
-            districtLoading={districtLoading}
-            healthData={healthData}
-            healthLoading={healthLoading}
-          />
-        );
+        return <Dashboard />;
       case "2":
-        return (
-          <Chart
-            healthData={healthData}
-            healthLoading={healthLoading}
-          />
-        );
+        return <Chart />;
       case "3":
-        return (
-          <Tabledata
-            healthData={healthData}
-            healthLoading={healthLoading}
-          />
-        );
-        case "4":
-          return <OpenLayersMap />;
+        return <Tabledata />;
+      case "4":
+        return <OpenLayersMap />;
       default:
-        return (
-          <Dashboard
-            districtData={districtData}
-            districtLoading={districtLoading}
-          />
-        );
+        return <Dashboard />;
     }
   };
 
   const renderMenu = () => (
     <>
-       <LogoContainer theme={theme}>
+      <LogoContainer theme={theme}>
         <img
           src={logo}
           alt="Logo"
-          style={{ maxWidth: "100%", height: "auto" }} 
+          style={{ maxWidth: "100%", height: "auto" }}
         />
       </LogoContainer>
-    <Menu
-      theme={theme === "dark" ? "dark" : "light"}
-      mode="inline"
-      selectedKeys={[selectedMenu]}
-      style={{ height: "100%", paddingTop: "0" }}
-    >
-      <Menu.Item
-        key="1"
-        icon={<DashboardOutlined />}
-        onClick={() => handleMenuClick("1")}
+      <Menu
+        theme={theme === "dark" ? "dark" : "light"}
+        mode="inline"
+        selectedKeys={[selectedMenu]}
+        style={{ height: "100%", paddingTop: "0" }}
       >
-        Dashboard
-      </Menu.Item>
-      <Menu.Item
-        key="4"
-        icon={<MapIcon style={{ fontSize: "18px" }} />}
-        onClick={() => handleMenuClick("4")}
-      >
-        Maps
-      </Menu.Item>
-      <Menu.Item
-        key="2"
-        icon={<BarChartOutlined />}
-        onClick={() => handleMenuClick("2")}
-      >
-        Chart
-      </Menu.Item>
-      <Menu.Item
-        key="3"
-        icon={<DatabaseOutlined />}
-        onClick={() => handleMenuClick("3")}
-      >
-        Table
-      </Menu.Item>
-    </Menu>
+        <Menu.Item
+          key="1"
+          icon={<DashboardOutlined />}
+          onClick={() => handleMenuClick("1")}
+        >
+          Dashboard
+        </Menu.Item>
+        <Menu.Item
+          key="4"
+          icon={<MapIcon style={{ fontSize: "18px" }} />}
+          onClick={() => handleMenuClick("4")}
+        >
+          Maps
+        </Menu.Item>
+        <Menu.Item
+          key="2"
+          icon={<BarChartOutlined />}
+          onClick={() => handleMenuClick("2")}
+        >
+          Chart
+        </Menu.Item>
+        <Menu.Item
+          key="3"
+          icon={<DatabaseOutlined />}
+          onClick={() => handleMenuClick("3")}
+        >
+          Table
+        </Menu.Item>
+      </Menu>
     </>
   );
 
@@ -240,7 +218,9 @@ const AppContent = () => {
             onClick={toggleSidebar}
             style={{ fontSize: "16px", color: theme.textColor }}
           />
-          <center><h1>Health and Air Quality Dashboard </h1></center>
+          <center>
+            <h1>Health and Air Quality Dashboard </h1>
+          </center>
           <CheckboxComponent toggleTheme={toggleTheme} />
         </StyledHeader>
         <StyledContent>{renderContent()}</StyledContent>
