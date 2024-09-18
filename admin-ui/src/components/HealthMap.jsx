@@ -194,9 +194,8 @@ const HealthMap = ({ onPassAverages }) => {
     setSelectedDisease(null);
     setSelectedGender(null);
     resetLayer();
-    onPassAverages(
-      
-    );
+    onPassAverages();
+    setChartData(healthData);
   };
 
 
