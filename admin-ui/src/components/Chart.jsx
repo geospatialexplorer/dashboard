@@ -50,12 +50,14 @@ const Chart = ({ healthData, healthLoading }) => {
       {
         label: "Actual Prevalence",
         data: dataset1,
+        barPercentage: 0.5,
         backgroundColor: "#F7E303",
         borderWidth: 1,
       },
       {
         label: "Reduced Prevalence",
         data: dataset2,
+        barPercentage: 0.5,
         backgroundColor: "#4963AB",
         borderWidth: 1,
       },
