@@ -170,7 +170,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
       </div>
       {/* <CombinedMaps onPassAverages={handleAveragesFromChild} /> */}
 
-      <HealthMap />
+      <HealthMap onPassAverages = {handleAveragesFromChild} />
       {/* <Chart healthData={healthData} healthLoading={healthLoading} />
       <div style={{ paddingTop: "100px" }}>
         <StateTable healthData={healthData} healthLoading={healthLoading} />

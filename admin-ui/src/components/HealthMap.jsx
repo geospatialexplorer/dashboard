@@ -11,13 +11,14 @@ import FilterComponent from "./FilterComponent";
 import Chart from "../components/Chart";
 import StateTable from "./Table";
 import { Row, Col, Card, Checkbox, Button } from "antd";
+import LegendComponent from "./Legend";
 
 // import "./HealthMap.css";
 
 // const DISTRICT_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
 const HEALTH_API_URL = "https://sheetdb.io/api/v1/vz5qlws6pgzqj";
 
-const HealthMap = ({}) => {
+const HealthMap = ({ onPassAverages }) => {
   const popupRef = useRef();
 
   const [popupContent, setPopupContent] = useState("");
@@ -35,19 +36,52 @@ const HealthMap = ({}) => {
   const [resetHealthData, setResetHealthData] = useState([]);
   const [chartData, setChartData] = useState([]);
 
-  // Mock Data
+  console.log(chartData, "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+
   const statesAndUTs = [
     "Andhra Pradesh",
     "Uttar Pradesh",
     "Gujarat",
-    // ...rest of the states
+    "Maharashtra",
+    "Mizoram",
+    "Rajasthan",
+    "Kerala",
+    "Madhya Pradesh",
+    "Punjab",
+    "Uttarakhand",
+    "Haryana",
+    "Jammu & Kashmir",
+    "Arunanchal Pradesh",
+    "Odisha",
+    "Bihar",
+    "Tamil Nadu",
+    "West Bengal",
+    "Karnataka",
+    "Assam",
+    "Himachal Pradesh",
+    "Chhattisgarh",
+    "Manipur",
+    "Jharkhand",
+    "NCT of Delhi",
+    "Chandigarh",
+    "Dadara & Nagar Havelli",
+    "Daman & Diu",
+    "Tripura",
+    "Nagaland",
+    "Sikkim",
+    "Meghalaya",
+    "Puducherry",
+    "Goa",
+    "Andaman & Nicobar Island",
+    "Lakshadweep",
   ];
 
   const diseases = [
     "Diabetes",
     "Hypertension",
     "Chronic Respiratory Disease",
-    // ...rest of the diseases
+    "Heart disease",
+    "Cancer",
   ];
 
   const gender = ["Men", "Women"];
@@ -160,7 +194,12 @@ const HealthMap = ({}) => {
     setSelectedDisease(null);
     setSelectedGender(null);
     resetLayer();
+    onPassAverages(
+      
+    );
   };
+
+
 
   const handleFilterClick = () => {
     // resetLayer();
@@ -377,6 +416,20 @@ const HealthMap = ({}) => {
     }
   };
 
+  const calculateAverage = (dataArray, property) => {
+    if (dataArray.length === 0) return 0;
+
+    const values = dataArray
+      .map((item) => parseFloat(item?.[property]))
+      .filter((value) => !isNaN(value));
+
+    const sum = values.reduce((acc, value) => acc + value, 0);
+
+    const Average = values.length > 0 ? sum / values.length : 0;
+
+    return Average.toFixed(2);
+  };
+
   //main query for the map
   const queryLayer = (state, disease, gender) => {
     // setHealthData(healthData);
@@ -456,6 +509,30 @@ const HealthMap = ({}) => {
 
     console.log(chartData);
 
+    const averageActualPrevalence = calculateAverage(
+      chartData,
+      "Actual_prevalence"
+    );
+    const averageReducedPrevalence = calculateAverage(
+      chartData,
+      "Reduced_prevalence"
+    );
+
+    const averageReducedTwo = calculateAverage(chartData, "ActualPM");
+    const averageActualTwo = calculateAverage(chartData, "ReducedPM");
+
+    console.log("Average Actual Prevalence:", averageActualPrevalence);
+    console.log("Average Reduced Prevalence:", averageReducedPrevalence);
+    console.log("Average Reduced PM2.5:", averageReducedTwo);
+    console.log("Average Actual PM2.5:", averageActualTwo);
+
+    onPassAverages(
+      averageReducedTwo,
+      averageActualTwo,
+      averageReducedPrevalence,
+      averageActualPrevalence
+    );
+
     // if (filteredFeatures.length > 0) {
     // }
   };
@@ -516,7 +593,13 @@ const HealthMap = ({}) => {
         </div>
         {/* <HealthMap></HealthMap> */}
       </div>
-      <div id="map" style={{ width: "100%", height: "80vh" }}></div>;
+      <div style={{position:'relative', height:'100vh'}}>
+        <div  style={{position:'absolute', bottom:'180px', left:'340px', zIndex:'100'}}>
+          <LegendComponent />
+        </div>
+        <div id="map" style={{ width: "100%", height: "80vh" }}></div>;
+      </div>
+
       {/* <div>
         <button onClick={queryLayer}>Query</button>
         <button onClick={resetLayer}>Reset</button>

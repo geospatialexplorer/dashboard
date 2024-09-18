@@ -21,18 +21,18 @@ const LegendComponent = () => {
 
   return (
     <div
-    // style={{
-    //   position: "absolute",
-    //   bottom: "10px",
-    //   left: "10px",
-    //   background: "white",
-    //   padding: "10px",
-    //   borderRadius: "5px",
-    //   // boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-    //   // border: "1px solid black",
-    //   zIndex: 1000,
-    //   opacity: 0.8,
-    // }}
+    style={{
+      // position: "absolute",
+      // bottom: "10px",
+      // left: "10px",
+      // background: "white",
+      // padding: "10px",
+      // borderRadius: "5px",
+      // // boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
+      // // border: "1px solid black",
+      // zIndex: 1000,
+      // opacity: 0.8,
+    }}
     >
       <h4>Legend</h4>
       {legendItems.map((item, index) => (
