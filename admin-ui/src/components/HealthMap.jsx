@@ -195,10 +195,11 @@ const HealthMap = ({ onPassAverages }) => {
     setSelectedGender(null);
     resetLayer();
     onPassAverages();
+    mapRef.current
+      .getOverlays()
+      .forEach((overlay) => overlay.setPosition(undefined));
     setChartData(healthData);
   };
-
-
 
   const handleFilterClick = () => {
     // resetLayer();
@@ -362,43 +363,83 @@ const HealthMap = ({ onPassAverages }) => {
   //style the element
 
   const getFeatureStyle = (prevalenceValue) => {
-    if (prevalenceValue < 0.05) {
+    if (prevalenceValue < 0.2) {
       return new Style({
         fill: new Fill({
-          color: "rgba(0, 255, 0, 0.5)", // Green for <1
+          color: "rgb(47, 110, 189)", // Green for <1
         }),
         stroke: new Stroke({
           color: "#00FF00",
           width: 1,
         }),
       });
-    } else if (prevalenceValue >= 0.05 && prevalenceValue <= 1) {
+    } else if (prevalenceValue >= 0.2 && prevalenceValue <= 0.4) {
       return new Style({
         fill: new Fill({
-          color: "rgba(255, 255, 0, 0.5)", // Yellow for 1-2
+          color: "rgb(72, 98, 172)", // Yellow for 1-2
         }),
         stroke: new Stroke({
-          color: "#FFFF00",
+          color: "#00FF00",
           width: 1,
         }),
       });
-    } else if (prevalenceValue > 1 && prevalenceValue <= 4) {
+    } else if (prevalenceValue > 0.4 && prevalenceValue <= 0.6) {
       return new Style({
         fill: new Fill({
-          color: "rgba(255, 165, 0, 0.5)", // Orange for 3-4
+          color: "#c6dbef", // Orange for 3-4
         }),
         stroke: new Stroke({
-          color: "#FFA500",
+          color: "#00FF00",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue > 0.6 && prevalenceValue <= 0.8) {
+      return new Style({
+        fill: new Fill({
+          color: "rgb(145, 181, 255)", // Red for >4
+        }),
+        stroke: new Stroke({
+          color: "#00FF00",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue > 0.8 && prevalenceValue <= 1) {
+      return new Style({
+        fill: new Fill({
+          color: "rgb(246, 227, 1)", // Red for >4
+        }),
+        stroke: new Stroke({
+          color: "#00FF00",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue > 1 && prevalenceValue <= 2) {
+      return new Style({
+        fill: new Fill({
+          color: "rgb(243, 154, 38)", // Red for >4
+        }),
+        stroke: new Stroke({
+          color: "#00FF00",
+          width: 1,
+        }),
+      });
+    } else if (prevalenceValue > 2 && prevalenceValue <= 4) {
+      return new Style({
+        fill: new Fill({
+          color: "rgb(42, 42, 42)", // Red for >4
+        }),
+        stroke: new Stroke({
+          color: "#00FF00",
           width: 1,
         }),
       });
     } else if (prevalenceValue > 4) {
       return new Style({
         fill: new Fill({
-          color: "rgba(255, 0, 0, 0.5)", // Red for >4
+          color: "#d73027", // Red for >4
         }),
         stroke: new Stroke({
-          color: "#FF0000",
+          color: "#00FF00",
           width: 1,
         }),
       });
@@ -408,7 +449,7 @@ const HealthMap = ({ onPassAverages }) => {
           color: "rgba(0, 0, 255, 0.5)", // Blue for undefined or out of range values
         }),
         stroke: new Stroke({
-          color: "#0000FF",
+          color: "#00FF00",
           width: 1,
         }),
       });
@@ -592,17 +633,20 @@ const HealthMap = ({ onPassAverages }) => {
         </div>
         {/* <HealthMap></HealthMap> */}
       </div>
-      <div style={{position:'relative', height:'100vh'}}>
-        <div  style={{position:'absolute', bottom:'180px', left:'340px', zIndex:'100'}}>
+      <div style={{ position: "relative", height: "100vh" }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "150px",
+            left: "15px",
+            zIndex: "100",
+          }}
+        >
           <LegendComponent />
         </div>
         <div id="map" style={{ width: "100%", height: "80vh" }}></div>;
       </div>
 
-      {/* <div>
-        <button onClick={queryLayer}>Query</button>
-        <button onClick={resetLayer}>Reset</button>
-      </div> */}
       <div ref={popupRef} className="ol-popup" style={popupStyle}>
         <div
           id="popup-content"

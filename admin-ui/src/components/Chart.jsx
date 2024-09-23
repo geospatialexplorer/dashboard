@@ -72,7 +72,7 @@ const Chart = ({ healthData, healthLoading }) => {
         beginAtZero: true,
         ticks: {
           // Customize the step size between ticks
-          stepSize: 1,
+          stepSize: 0.2,
           // Optionally, you can use a callback to format tick labels
           callback: function (value, index, values) {
             return value; // Customize this function if you need to format the labels
@@ -84,7 +84,7 @@ const Chart = ({ healthData, healthLoading }) => {
 
   // Calculate chart width based on number of data points
   const visibleDataCount = combinedData.length;
-  console.log(combinedData.length,'================================');
+  console.log(combinedData.length, "================================");
   const chartWidth = visibleDataCount * 70;
 
   return (
@@ -100,7 +100,12 @@ const Chart = ({ healthData, healthLoading }) => {
           height: "calc(70vh - 60px)",
         }}
       >
-        <div style={{ width:combinedData.length == 7070 ? '1500%' : `${chartWidth}px`, height: "100%" }}>
+        <div
+          style={{
+            width: combinedData.length == 7070 ? "1500%" : `${chartWidth}px`,
+            height: "100%",
+          }}
+        >
           <Bar data={chartData} options={options} />
         </div>
       </div>
