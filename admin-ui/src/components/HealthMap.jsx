@@ -62,7 +62,7 @@ const HealthMap = ({ onPassAverages }) => {
     "Chhattisgarh",
     "Manipur",
     "Jharkhand",
-    "NCT of Delhi",
+    "NCTofDelhi",
     "Chandigarh",
     "Dadara & Nagar Havelli",
     "Daman & Diu",
