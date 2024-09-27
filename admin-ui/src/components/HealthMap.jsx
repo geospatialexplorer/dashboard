@@ -15,8 +15,8 @@ import LegendComponent from "./Legend";
 
 // import "./HealthMap.css";
 
-// const DISTRICT_API_URL = "https://sheetdb.io/api/v1/x0im8yne6vc93";
-const HEALTH_API_URL = "https://sheetdb.io/api/v1/vz5qlws6pgzqj";
+
+const HEALTH_API_URL = "https://sheetdb.io/api/v1/iv147xri3ae3i";
 
 const HealthMap = ({ onPassAverages }) => {
   const popupRef = useRef();
