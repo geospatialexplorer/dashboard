@@ -84,7 +84,7 @@ const Chart = ({ healthData, healthLoading }) => {
 
   // Calculate chart width based on number of data points
   const visibleDataCount = combinedData.length;
-  console.log(combinedData.length, "================================");
+  
   const chartWidth = visibleDataCount * 70;
 
   return (

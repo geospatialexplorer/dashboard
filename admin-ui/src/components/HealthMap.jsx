@@ -36,7 +36,7 @@ const HealthMap = ({ onPassAverages }) => {
   const [resetHealthData, setResetHealthData] = useState([]);
   const [chartData, setChartData] = useState([]);
 
-  console.log(chartData, "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+
 
   const statesAndUTs = [
     "Andhra Pradesh",
@@ -240,6 +240,7 @@ const HealthMap = ({ onPassAverages }) => {
           setDistrictData(data); // Initially, show all features
           setFilteredFeatures(geoData);
           setFeatures(geoData);
+          console.log(geoData, "pppppppppppppppppp");
         } else {
           console.error("Failed to fetch data:", response.statusText);
         }
@@ -490,6 +491,8 @@ const HealthMap = ({ onPassAverages }) => {
           feature.Gender === gender
         );
       });
+      console.log(filterdHealthData, "sdffffffffsfasd");
+      console.log(filterdStateData, "sd");
 
       // setHealthData(filterdHealthData);
       setChartData(filterdHealthData);

@@ -112,7 +112,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
 
     {
       title: "Actual PM 2.5 concentration ",
-      count: averages[1] ? averages[0] : 32.98,
+      count: averages[1] ? averages[0] : 43.23,
       color: "#4caf50",
       image: AvgActualPm,
       aosAnimation: "flip-left",
@@ -120,7 +120,7 @@ const Dashboard = ({ healthData, healthLoading }) => {
 
     {
       title: "Targeted PM 2.5 concentration by NCAP",
-      count: averages[3] ? averages[1] : 43.23,
+      count: averages[3] ? averages[1] : 32.98,
       color: "#f44336",
       image: ReducedPm,
       aosAnimation: "flip-left",
